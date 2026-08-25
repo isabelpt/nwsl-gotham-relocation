@@ -13,6 +13,7 @@ import shapMechanism from '../assets/figures/shap-mechanism.png'
 import shapRbaEtihad from '../assets/figures/shap-rba-etihad.png'
 import shapMetroSizeDependence from '../assets/figures/shap-metro-size-dependence.png'
 import gbtTreeWalkthrough from '../assets/figures/gbt-tree-walkthrough.png'
+import StadiumFillViz from '../components/StadiumFillViz'
 import modelDivergence from '../assets/figures/model-divergence-dotplot.png'
 
 export default function ResultsSection() {
@@ -55,11 +56,15 @@ export default function ResultsSection() {
             <div className="border border-[var(--color-line)] bg-[var(--color-paper-alt)] p-5 shadow-offset-accent flex flex-col justify-center">
               <p className="font-mono-label text-[11px] text-[var(--color-primary)] mb-3">Why this matters</p>
               <p className="text-sm text-[var(--color-ink)]/80 leading-relaxed">
+                Upon initial inspection it looked like the models worked. The coefficient of the reachable population count was always positive, and similar in size to the rivalry and new stadium boosts.
+                It is the GBT model's top SHAP driver by magnitude. The models hold up under a standard 80/20 train-test split, but collaps when tested on a team they haven't seen before.
+                This matters because the models are learning to recognize teams instead of the drivers behind attendance, 
                 On the surface, regressing attendance on reachable population seems to work. The coefficient is positive
                 and comparable to other effects such as rivalry-matches and the new-stadium boost. It's the GBT model's top SHAP driver by magnitude.
                 These models work under a standard 80/20 train-test split, but when tested on a team they haven't seen before (GroupKFold) the models collapse.
-                R² drops from
-                0.51 to −1.88 for the GBT model, 0.16 to −2.26 for OLS (table below). The model was learning to recognize teams, not the drivers behind attendance.
+                R² drops from 0.51 to −1.88 for the GBT model, 0.16 to −2.26 for OLS. The model was learning to recognize teams, not the drivers behind attendance.
+                This matters because if the model does not understand what actually drives attendance, then it cannot be trusted to predict Gotham's attendance
+                in an unseen venue with unprecedented accessibility.
               </p>
             </div>
           </div>
@@ -77,17 +82,16 @@ export default function ResultsSection() {
           </p>
         </div>
 
-        <TransitionHeading>Which CatBoost model are we even talking about?</TransitionHeading>
+        <TransitionHeading>Building a stronger model: CatBoost iterations</TransitionHeading>
 
         <div className="mb-14">
           <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mb-5">
-            "CatBoost" above is actually three separate fits, and mixing them up is an easy way to
-            misread every number on this page. Only the third one ever touches the Queens prediction.
+            There are three iterations of the CatBoost models and only the third one ever touches the Queens prediction. The only difference is how they are trained.
           </p>
           <CatBoostModelsExplainer />
         </div>
 
-        <TransitionHeading>What's literally inside one of these trees?</TransitionHeading>
+        {/* <TransitionHeading>What's literally inside one of these trees?</TransitionHeading>
 
         <div className="mb-6">
           <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
@@ -99,13 +103,13 @@ export default function ResultsSection() {
             claim="A brand-new stadium gets a lower nudge than an established one — in tree 1 of 60, before any accessibility feature even separates them."
             caption="This is a real tree from the GBT ensemble (60 trees total, each depth 2 — kept shallow specifically to limit how much a tree can memorize about team identity). Both Etihad Park (3.2M reachable) and Red Bull Arena (1.05M) clear the root's accessibility threshold, so this particular tree can't tell them apart on accessibility at all — it's the second split, on new_stadium_flag, that separates them, and it pushes Gotham's first season at a new venue down (+0.159), not up (+0.731 for an established stadium). The final prediction sums a small nudge like this from all 60 trees, shrunk by a 0.05 learning rate — no single tree is the whole story, but this one already echoes the team_venue_tenure finding from the SHAP check below, independently."
           />
-        </div>
+        </div> */}
 
         {/* ============================================================ */}
         <ResultsQuestionHeading
           index="Q2"
-          question="Does accessibility actually improve?"
-          sub="Set the modeling struggle aside — what does the move measurably change about who can reach a game, and is that change really what the models are picking up on?"
+          question="How much is accessibility improving?"
+          sub="Quantifying the size of Gotham's accessibility increase to see what change the models are being fed."
         />
 
         <div className="mb-6">
@@ -129,20 +133,19 @@ export default function ResultsSection() {
           </p>
         </div>
 
-        <TransitionHeading>But is that reach actually what the model is rewarding — or just novelty?</TransitionHeading>
+        <TransitionHeading>Does the model reward reach or just the novelty of a new stadium?</TransitionHeading>
 
         <div className="mb-14">
           <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
-            Figures 4–5 — 13_shap_mechanism_check.ipynb
+            Figures 4–5 — CatBoost SHAP analysis
           </p>
           <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mb-4">
-            Two features were added here that the earlier models didn't have: <code>team_venue_tenure</code> (seasons
-            since this team's actual detected relocation — null unless one occurred, not just "years since 2016")
-            and <code>team_league_tenure</code> (seasons since the team's real NWSL expansion, null for founding-era
-            franchises misdated to 2016 in the raw data). Without them, a "new venue" effect had nowhere to go
-            except metro_size or venue_name, so any accessibility signal was potentially absorbing credit for
-            plain novelty. Separating them out both improved LOTO generalization (r = 0.44 → 0.50) and lets the
-            SHAP mechanism check below isolate accessibility from newness directly.
+            <code>team_venue_tenure</code> (seasons
+            since this team's relocation, null unless one occurred)
+            and <code>team_league_tenure</code> (seasons since the team's real NWSL expansion, null for original teams)
+            were added to the model to try and capture the "honeymoon effect", to try and parse out the novelty of a new stadium
+            from the actual accessibility increases. Adding these features improved LOTO generalization (r = 0.44 → 0.50) and helps
+            SHAP isolate these effects.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FigureCard
@@ -200,7 +203,9 @@ export default function ResultsSection() {
         </div>
 
         <TransitionHeading>So the number this project actually reports comes from synthetic control.</TransitionHeading>
-
+        <div className="mt-10 max-w-3xl mx-auto">
+                  <StadiumFillViz />
+                </div>
         <div className="mb-6">
           <p className="font-mono-label text-xs text-[var(--color-primary)] mb-1">Figure 8 — 05_synthetic_control.ipynb</p>
           <p className="font-serif-heading text-lg font-semibold text-[var(--color-primary-deep)] mb-3">
