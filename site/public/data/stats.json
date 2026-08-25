@@ -1,0 +1,44 @@
+{
+  "current": {
+    "name": "Red Bull Arena",
+    "by_threshold": {
+      "30": {
+        "reachable_tracts": 16,
+        "reachable_population": 64815.0
+      },
+      "45": {
+        "reachable_tracts": 81,
+        "reachable_population": 263056.0
+      },
+      "60": {
+        "reachable_tracts": 272,
+        "reachable_population": 1051425.0
+      },
+      "90": {
+        "reachable_tracts": 1348,
+        "reachable_population": 5742238.0
+      }
+    }
+  },
+  "future": {
+    "name": "Etihad Park",
+    "by_threshold": {
+      "30": {
+        "reachable_tracts": 118,
+        "reachable_population": 448545.0
+      },
+      "45": {
+        "reachable_tracts": 370,
+        "reachable_population": 1319346.0
+      },
+      "60": {
+        "reachable_tracts": 847,
+        "reachable_population": 3201230.0
+      },
+      "90": {
+        "reachable_tracts": 2125,
+        "reachable_population": 8216589.0
+      }
+    }
+  }
+}

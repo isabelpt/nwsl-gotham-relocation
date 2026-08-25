@@ -1,0 +1,5 @@
+team,move_year,pre_move_avg_attendance,pre_move_n_games,post_move_avg_attendance,post_move_n_games,pct_lift,used_as_scenario
+Kansas City Current,2024,8759.466666666667,30,11500.0,37,31.286531904529944,excluded (capacity-suppressed: sells out every game)
+San Diego Wave FC,2023,9599.285714285714,14,16201.612244897959,49,68.77935220520234,low
+Seattle Reign FC,2022,4410.934782608696,46,8975.257575757576,66,103.47744906918498,capacity_cap
+Washington Spirit,2021,4420.354166666667,48,12126.23076923077,65,174.32713108540364,"capacity_cap (unused, rounds same as Seattle)"

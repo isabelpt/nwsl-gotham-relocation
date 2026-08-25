@@ -1,0 +1,5 @@
+model,features,naive_scheme,naive_metric,naive_value,grouped_scheme,grouped_metric,grouped_value,source
+"Linear (baseline, 5 predictors)","ppg, market_size_log, new_stadium_flag, rivalry_flag, dist_miles",row-shuffled 5-fold KFold,R^2,-0.018,-,-,,04
+"Linear (extended, +transit)","ppg, new_stadium_flag, rivalry_flag, catchment_pop_60min_100k",row-shuffled 5-fold KFold,R^2,0.156,GroupKFold (by team),R^2,-2.258,04
+"GBT (extended, same features)",same as Linear extended,row-shuffled 5-fold KFold,R^2,0.512,GroupKFold (by team),R^2,-1.875,04
+CatBoost (full feature set),"table_rank, venue/schedule, metro_size, etc.",random 80/20 split,Pearson r,0.862,Leave-One-Team-Out,pooled Pearson r,0.44,12

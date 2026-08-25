@@ -1,0 +1,9 @@
+site_label,site_name,threshold_min,reachable_tracts,reachable_population
+current,Red Bull Arena,30,16,64815.0
+current,Red Bull Arena,45,81,263056.0
+current,Red Bull Arena,60,272,1051425.0
+current,Red Bull Arena,90,1348,5742238.0
+future,Etihad Park,30,118,448545.0
+future,Etihad Park,45,370,1319346.0
+future,Etihad Park,60,847,3201230.0
+future,Etihad Park,90,2125,8216589.0

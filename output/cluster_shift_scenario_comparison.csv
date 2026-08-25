@@ -1,0 +1,5 @@
+cluster_name,"Hard cutoff, 60 min","Hard cutoff, 90 min","Distance-decay, 30-min half-life"
+"lower-income, black_nh-plurality, farther reach",-25.432427514067435,-0.848205616763682,-6.563655492326177
+"lower-income, hispanic/latino-plurality, farther reach",-18.952670265857943,-1.4481399944400088,-3.4487130681112497
+"higher-income, white_nh-plurality, closer reach",13.655236691147188,-7.539575644978957,-2.590832997139138
+"higher-income, asian_nh-plurality, closer reach",30.72986108877819,9.83592125618265,12.603201557576554

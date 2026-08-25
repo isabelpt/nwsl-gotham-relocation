@@ -1,0 +1,6 @@
+team,old_venue,new_venue,old_reachable_tracts,new_reachable_tracts,pct_change_tracts,old_reachable_population,new_reachable_population,pct_change_population
+NJ/NY Gotham FC,Red Bull Arena,Etihad Park,272,847,211.3970588235294,1051425.0,3201230.0,204.4658439736548
+Kansas City Current,Children's Mercy Park,CPKC Stadium,2,51,2450.0,6028.0,123809.0,1953.8984737889848
+San Diego Wave FC,Torero Stadium,Snapdragon Stadium,90,101,12.222222222222223,358541.0,402583.0,12.283671881319002
+Seattle Reign FC,Cheney Stadium,Lumen Field,15,198,1220.0,77359.0,833559.0,977.5203919388824
+Washington Spirit,Maryland SoccerPlex,Audi Field,4,204,5000.0,25934.0,676306.0,2507.79671473741

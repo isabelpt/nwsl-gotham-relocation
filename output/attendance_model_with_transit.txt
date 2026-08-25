@@ -1,0 +1,18 @@
+Baseline predictors: ppg, market_size_log, new_stadium_flag, rivalry_flag, dist_miles
+                       ppg: +0.1485
+           market_size_log: +0.1958
+          new_stadium_flag: +0.1359
+              rivalry_flag: +0.2863
+                dist_miles: -0.0061
+
+Extended predictors: ppg, new_stadium_flag, rivalry_flag, catchment_pop_60min_100k
+                       ppg: +0.1955
+          new_stadium_flag: +0.0593
+              rivalry_flag: +0.1279
+  catchment_pop_60min_100k: +0.0554
+
+Note: has_rail_access was tested but excluded from this final spec -- it's 1 for only 3 teams in the panel (Boston Legacy FC, NJ/NY Gotham FC, Seattle Reign FC), too few clusters to distinguish from a team fixed effect. See notebook for detail.
+
+Note: catchment_pop_60min_100k (this project's own r5py-isochrone accessibility measure, same one CatBoost calls metro_size, rescaled to per-100k population) replaces the vendored nearest_stop_distance_mi used in an earlier version of this notebook -- see intro cell.
+
+Note: market_size_log and dist_miles are dropped from the extended spec (kept in baseline) -- market_size_log correlates 0.70 with catchment_pop_60min_100k, and dist_miles's coefficient was tiny and sign-unstable across specs. Neither carried real signal once catchment_pop_60min_100k is in the model. See intro cell.

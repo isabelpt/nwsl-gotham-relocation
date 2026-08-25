@@ -1,0 +1,3 @@
+treated_unit,donor_pool,pre_period_rmse_log,actual_post_move_mean_attendance,synthetic_no_move_mean_attendance,scm_implied_lift_pct,raw_pre_post_lift_pct,scm_vs_raw_diff_pp
+Seattle Reign FC,"Chicago Stars FC, Houston Dash, Orlando Pride, Portland Thorns FC",0.026011202384849018,8672.479493464052,5925.192070967186,46.36621715536082,103.47744906918498,-57.11123191382416
+Washington Spirit,"Chicago Stars FC, Houston Dash, Orlando Pride, Portland Thorns FC",0.07203800072128433,12181.204426129425,5824.637911571832,109.13238918987527,174.32713108540364,-65.19474189552837

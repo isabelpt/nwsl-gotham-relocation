@@ -1,0 +1,42 @@
+[
+  {
+    "id": 0,
+    "name": "lower-income, hispanic/latino-plurality, transit-dependent reach",
+    "color": "#4B2E83",
+    "n_tracts": 609,
+    "population": 2688195.0,
+    "median_household_income": 55830.0,
+    "avg_delta_transit_min": -6.422003284072249,
+    "pct_gaining_access": 0.7635467980295566
+  },
+  {
+    "id": 1,
+    "name": "higher-income, white_nh-plurality, transit-dependent reach",
+    "color": "#00A398",
+    "n_tracts": 607,
+    "population": 2603750.0,
+    "median_household_income": 127453.0,
+    "avg_delta_transit_min": -8.397034596375617,
+    "pct_gaining_access": 0.8270181219110379
+  },
+  {
+    "id": 2,
+    "name": "lower-income, black_nh-plurality, transit-dependent reach",
+    "color": "#E34948",
+    "n_tracts": 474,
+    "population": 1692804.0,
+    "median_household_income": 71160.0,
+    "avg_delta_transit_min": -6.118143459915612,
+    "pct_gaining_access": 0.7679324894514767
+  },
+  {
+    "id": 3,
+    "name": "higher-income, asian_nh-plurality, walkable reach",
+    "color": "#F2A93B",
+    "n_tracts": 486,
+    "population": 1684434.0,
+    "median_household_income": 83567.0,
+    "avg_delta_transit_min": -52.522633744855966,
+    "pct_gaining_access": 1.0
+  }
+]

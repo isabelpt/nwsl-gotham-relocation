@@ -1,0 +1,13 @@
+.ipynb_checkpoints/
+__pycache__/
+catboost_info/
+.DS_Store
+.Rhistory
+node_modules/
+dist/
+
+# Raw geospatial source data (too large for GitHub, re-downloadable/reproducible)
+data/raw/
+
+# Local dev tooling config (not part of the project)
+.claude/
