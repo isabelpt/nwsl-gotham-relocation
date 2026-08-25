@@ -4,15 +4,6 @@
 Park (Willets Point, Queens, shared with NYCFC, opening 2027) change transit/walk
 accessibility for fans, and how will that accessibility change affect attendance?
 
-**Course-scope note (2026-08-23):** the pipeline below was pared down to match what QSS 45
-actually covered -- OLS/logistic regression, gradient-boosted trees + SHAP, and (per the
-instructor's direct instruction for this project) synthetic control. Panel fixed-effects
-regression with clustered/robust standard errors and difference-in-differences were never
-taught in this course, so the sections that depended on them (a fixed-effects follow-up to `04`
-and a standalone DiD cross-check, `13`) were cut rather than kept as unteachable machinery. Both
-are described in "Known limitations" below rather than deleted from the record entirely -- the
-git history keeps the removed notebook content if it's ever needed again.
-
 This project reuses substantial prior work rather than starting from scratch:
 
 - **[nwsl-project](../../QSS%2020/nwsl-project)** -- cleaned NWSL/MLS game, team, and stadium
@@ -20,22 +11,7 @@ This project reuses substantial prior work rather than starting from scratch:
   (`code/03_stadiums_analyze.ipynb`) predicting `log(attendance)` from `ppg`,
   `market_size_log`, `new_stadium_flag`, `rivalry_flag`, `dist_miles`. This is the baseline
   model we extend with accessibility features.
-- **[nwsl_transportation](../nwsl_transportation)** -- GTFS feeds + OSM extracts for the NY/NJ
-  metro, NY(36)/NJ(34) Census tract shapefiles + ACS population, and a working r5py transit
-  network with isochrones already computed for Red Bull Arena and Etihad Park
-  (`code/08_gtfs_isochrones.ipynb`), plus per-stadium accessibility features for every
-  NWSL/MLS venue (`data/processed/stadium_accessibility.csv`, `games_with_transit.csv`).
-  **These specific files are vendored into this repo's own `data/` folder** (not read live from
-  `../nwsl_transportation` at runtime) so `nwsl_geospatial` has no external-repo dependency --
-  see `data/processed/{stadium_accessibility,games_with_transit,relocation_stadiums,
-  nwsl_transportation_teams_clean}.csv`, `data/processed/relocation_{isochrones.geojson,
-  tract_travel_times.csv}`, and `data/raw/census/acs_{population_by_tract,demographics_ny_nj}.csv`.
-  The GTFS zips and NY/NJ tract shapefiles this project also needs were already present locally
-  in `data/raw/{gtfs,census}` from this project's own comparison-city/new-venue pulls (`01`,
-  `09`), so nothing further needed copying there.
 
-`nwsl_geospatial` is where this gets pulled together, extended to the comparison cities,
-modeled, and turned into the final deliverable.
 
 ## Repo structure (as built, numbered in run order)
 
