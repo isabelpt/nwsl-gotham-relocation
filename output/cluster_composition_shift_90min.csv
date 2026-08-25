@@ -1,5 +1,0 @@
-cluster_name,weighted_pop_current,weighted_pop_future,change,pct_of_future_total,pct_of_current_total,pct_point_shift
-"higher-income, white_nh-plurality, closer reach",2102427.0,2476554.0,374127.0,31.736585802182542,39.2761614471615,-7.539575644978957
-"lower-income, hispanic/latino-plurality, farther reach",1719620.0,2393844.0,674224.0,30.6766723047589,32.12481229919891,-1.4481399944400088
-"lower-income, black_nh-plurality, farther reach",1004325.0,1397908.0,393583.0,17.913934921490664,18.762140538254346,-0.848205616763682
-"higher-income, asian_nh-plurality, closer reach",526562.0,1535161.0,1008599.0,19.672806971567894,9.836885715385245,9.83592125618265

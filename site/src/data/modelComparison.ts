@@ -1,52 +1,62 @@
-// From output/leakage_check_summary.csv. "Naive" = row-shuffled k-fold (lets a team's other
-// seasons leak into its own held-out fold); "grouped" = GroupKFold / Leave-One-Team-Out, which
-// holds a whole team out — the honest test of whether the model generalizes to a team it
-// has never seen.
+// From output/leakage_check_summary.csv. "Naive" = in-sample fit (linear stage) or row-shuffled
+// random split (combined model) — lets a venue's other games leak into its own held-out fold.
+// "Grouped" = Leave-One-Venue-Out (LOVO): hold out one (team, venue) pair at a time — the honest
+// test of whether the model generalizes to a venue it hasn't seen, which is the actual question
+// this project needs answered (Gotham is always in-sample as a *team*; only Etihad Park, the
+// *venue*, is genuinely novel — team-level Leave-One-Team-Out was tried and dropped for exactly
+// this reason).
+//
+// Every row reports R², Pearson r, MAE, and RMSE, computed the same way for every model: pooled
+// out-of-fold predictions (every held-out fold's predictions concatenated, then scored once).
+// R² and Pearson r aren't interchangeable — a model can correlate reasonably (r) while being
+// badly miscalibrated in absolute terms (R²) — and R² alone can be misleading at this grain (a
+// low-variance venue can post a terrible R² on a small absolute error), which is why MAE/RMSE
+// (in raw attendance units) are shown alongside rather than instead.
 export type ModelRow = {
   model: string
   features: string
-  naiveMetric: string
-  naiveValue: number
-  groupedMetric: string | null
-  groupedValue: number | null
+  naiveScheme: string
+  naiveR2: number
+  naivePearsonR: number
+  naiveMae: number
+  naiveRmse: number
+  groupedScheme: string | null
+  groupedR2: number | null
+  groupedPearsonR: number | null
+  groupedMae: number | null
+  groupedRmse: number | null
   source: string
 }
 
 export const modelComparison: ModelRow[] = [
   {
-    model: 'Linear (baseline, 5 predictors)',
-    features: 'ppg, market_size_log, new_stadium_flag, rivalry_flag, dist_miles',
-    naiveMetric: 'R²',
-    naiveValue: -0.018,
-    groupedMetric: null,
-    groupedValue: null,
-    source: '04',
+    model: 'Linear (accessibility only, clustered SE)',
+    features: 'log(metro_size) — the linear stage of the residual model below',
+    naiveScheme: 'naive (in-sample)',
+    naiveR2: 0.154,
+    naivePearsonR: 0.392,
+    naiveMae: 4068,
+    naiveRmse: 5426,
+    groupedScheme: 'Leave-One-Venue-Out (pooled)',
+    groupedR2: -0.045,
+    groupedPearsonR: 0.170,
+    groupedMae: 4463,
+    groupedRmse: 5848,
+    source: '10',
   },
   {
-    model: 'Linear (extended, +transit)',
-    features: 'ppg, new_stadium_flag, rivalry_flag, catchment_pop_60min_100k',
-    naiveMetric: 'R²',
-    naiveValue: 0.156,
-    groupedMetric: 'R² (GroupKFold)',
-    groupedValue: -2.258,
-    source: '04',
-  },
-  {
-    model: 'GBT (extended, same features)',
-    features: 'same as linear, extended',
-    naiveMetric: 'R²',
-    naiveValue: 0.512,
-    groupedMetric: 'R² (GroupKFold)',
-    groupedValue: -1.875,
-    source: '04',
-  },
-  {
-    model: 'CatBoost (full feature set)',
-    features: 'table_rank, venue/schedule, metro_size, team_venue_tenure, team_league_tenure, etc.',
-    naiveMetric: 'Pearson r',
-    naiveValue: 0.867,
-    groupedMetric: 'pooled r (LOTO)',
-    groupedValue: 0.496,
-    source: '12',
+    model: 'Linear + CatBoost residual (combined model)',
+    features: 'log(metro_size) [linear] + table_rank, venue/schedule, stadium_capacity, etc. [CatBoost residual]',
+    naiveScheme: 'naive (random 80/20 split)',
+    naiveR2: 0.778,
+    naivePearsonR: 0.883,
+    naiveMae: 1635,
+    naiveRmse: 2453,
+    groupedScheme: 'Leave-One-Venue-Out (pooled)',
+    groupedR2: -0.167,
+    groupedPearsonR: 0.126,
+    groupedMae: 4587,
+    groupedRmse: 6308,
+    source: '10+11',
   },
 ]

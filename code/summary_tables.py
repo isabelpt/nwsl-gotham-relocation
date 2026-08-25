@@ -1,17 +1,13 @@
 """
-Three consolidated summary tables that back up claims currently made only in
-README prose, built entirely from data this project already produced -- no
-new modeling. Not part of the numbered 01-13 pipeline (nothing here computes
-anything; it just joins/reshapes existing outputs), so it's a plain script,
-not a notebook, and isn't renumbered into the main sequence.
+Summary tables
 
 Outputs (all to ../output/, csv only):
   1. accessibility_gain_by_relocation.csv -- reachable pop/tracts, old venue
      vs. new, for all 5 relocations (Gotham + 4 comparison cities)
   2. synthetic_control_comparables.csv    -- the 3 comparable teams' own
-     pre/post move attendance change that `05`'s lift scenarios are built from
-  3. leakage_check_summary.csv            -- naive vs. team-grouped CV, side
-     by side, across all three model families (linear, GBT, CatBoost)
+     pre/post move attendance change that `04`'s lift scenarios are built from
+  3. leakage_check_summary.csv            -- naive vs. Leave-One-Venue-Out,
+     side by side, for both stages of the residual model (linear, combined)
 
 Run from code/: python summary_tables.py
 """
@@ -105,8 +101,8 @@ def build_table1():
 
 
 # ---------------------------------------------------------------------------
-# Table 2: synthetic-control comparables (the 3 teams `05`'s scenarios are
-# built from -- reproduces 05's lift_df, which was printed but never saved)
+# Table 2: synthetic-control comparables (the 3 teams `04`'s scenarios are
+# built from -- reproduces 04's lift_df, which was printed but never saved)
 # ---------------------------------------------------------------------------
 
 def build_table2():
@@ -163,26 +159,30 @@ def build_table2():
 
 
 # ---------------------------------------------------------------------------
-# Table 3: leakage-check summary across all three model families
-# (numbers transcribed from 04's and 12's printed notebook output; no
-# re-fitting here, since the point is to lay them side by side, not rerun
-# them)
+# Table 3: leakage-check summary
 # ---------------------------------------------------------------------------
 
 def build_table3():
+    linear_fit = pd.read_csv(os.path.join(OUTPUT_DIR, "nwsl_attendance_linear_fit_summary.csv")).set_index("scheme")
+    combined_fit = pd.read_csv(os.path.join(OUTPUT_DIR, "catboost_combined_model_fit_summary.csv")).set_index("scheme")
+
+    def row(model, features, naive_key, grouped_key, fit_df, source):
+        naive, grouped = fit_df.loc[naive_key], fit_df.loc[grouped_key]
+        return {
+            "model": model, "features": features,
+            "naive_scheme": naive_key, "naive_r2": naive["r2"], "naive_pearson_r": naive["pearson_r"],
+            "naive_mae": naive["mae"], "naive_rmse": naive["rmse"],
+            "grouped_scheme": grouped_key, "grouped_r2": grouped["r2"], "grouped_pearson_r": grouped["pearson_r"],
+            "grouped_mae": grouped["mae"], "grouped_rmse": grouped["rmse"],
+            "source": source,
+        }
+
     rows = [
-        {"model": "Linear (baseline, 5 predictors)", "features": "ppg, market_size_log, new_stadium_flag, rivalry_flag, dist_miles",
-         "naive_scheme": "row-shuffled 5-fold KFold", "naive_metric": "R^2", "naive_value": -0.018,
-         "grouped_scheme": "-", "grouped_metric": "-", "grouped_value": np.nan, "source": "04"},
-        {"model": "Linear (extended, +transit)", "features": "ppg, new_stadium_flag, rivalry_flag, catchment_pop_60min_100k",
-         "naive_scheme": "row-shuffled 5-fold KFold", "naive_metric": "R^2", "naive_value": 0.156,
-         "grouped_scheme": "GroupKFold (by team)", "grouped_metric": "R^2", "grouped_value": -2.258, "source": "04"},
-        {"model": "GBT (extended, same features)", "features": "same as Linear extended",
-         "naive_scheme": "row-shuffled 5-fold KFold", "naive_metric": "R^2", "naive_value": 0.512,
-         "grouped_scheme": "GroupKFold (by team)", "grouped_metric": "R^2", "grouped_value": -1.875, "source": "04"},
-        {"model": "CatBoost (full feature set)", "features": "table_rank, venue/schedule, metro_size, etc.",
-         "naive_scheme": "random 80/20 split", "naive_metric": "Pearson r", "naive_value": 0.862,
-         "grouped_scheme": "Leave-One-Team-Out", "grouped_metric": "pooled Pearson r", "grouped_value": 0.440, "source": "12"},
+        row("Linear (accessibility only, clustered SE)", "log(metro_size)",
+            "naive (in-sample)", "Leave-One-Venue-Out (pooled)", linear_fit, "10"),
+        row("Linear + CatBoost residual (combined model)",
+            "log(metro_size) [linear] + table_rank, venue/schedule, stadium_capacity, etc. [CatBoost residual]",
+            "naive (random 80/20 split)", "Leave-One-Venue-Out (pooled)", combined_fit, "10+11"),
     ]
     df = pd.DataFrame(rows)
     df.to_csv(os.path.join(OUTPUT_DIR, "leakage_check_summary.csv"), index=False)

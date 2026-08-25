@@ -18,13 +18,17 @@ export default function QuestionSection() {
               attendance?
             </p>
             <p>
-              We try to predict this attendence lift in three ways. First, we extend <a href="https://nwsl-growth-analysis-e4td.vercel.app/"><strong>nwsl-project</strong></a>'s team-season attendance regression
-              (points-per-game, market size, a new-stadium flag, a rivalry flag) by adding a
-              transit-accessibility feature computed from real GTFS + OSM isochrones. 
-              Second, we conduct a synthetic control analysis of four other NWSL teams' own stadium relocations 
-              to estimate what Gotham's attendance would have looked like if they had stayed at Red Bull Arena vs when they move to Etihad Park.
-              Third, we build a more robust CatBoost model to predict attendance, 
-              and test whether the transit-accessibility feature holds up once we honestly check if the model generalizes to a team it hasn't seen.
+              We try to predict this attendance lift two ways. First, a two-stage predictive model: a
+              linear regression of log(attendance) on log(reachable population) alone — log-transformed
+              specifically so it can extrapolate to Etihad Park's much larger catchment without
+              running away — plus a CatBoost model trained on everything that linear stage leaves
+              unexplained (opponent, schedule, venue capacity, and more), computed from real GTFS +
+              OSM isochrones (see <a href="https://nwsl-growth-analysis-e4td.vercel.app/"><strong>nwsl-project</strong></a> for
+              the prior work this builds on). We honestly check whether that model generalizes to a
+              venue it hasn't seen (it mostly doesn't — see Results). Second, a synthetic control
+              analysis of four other NWSL teams' own stadium relocations, estimating what Gotham's
+              attendance would have looked like if they had stayed at Red Bull Arena vs. moving to
+              Etihad Park.
             </p>
           </div>
           <div className="border border-[var(--color-line)] bg-[var(--color-paper-alt)] p-5 shadow-offset-accent">

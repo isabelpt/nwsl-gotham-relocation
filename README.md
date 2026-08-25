@@ -15,17 +15,21 @@ This project reuses substantial prior work rather than starting from scratch:
 
 ## Repo structure (as built, numbered in run order)
 
-`code/` holds only the steps that get a real section in the paper -- `01` through `13`, numbered
-in run order, with one exception: `04` reads an output written by `11` (see `04`'s writeup
-below), so `11` has to run before `04` despite the numbering. (The original `13`, a standalone
-DiD cross-check, was cut for course scope -- see
-below -- so the former `14` was renumbered down to `13` to close the gap.) `code/supplementary/` holds one notebook,
+`code/` holds only the steps that get a real section in the paper -- `01` through `12`, numbered
+strictly in run order. **Renumbered 2026-08-25**: `10` (the linear accessibility stage) and `11`
+(CatBoost on `10`'s residual) used to be numbered `04`/`12`, which meant the file order didn't
+match the real run order (`10` reads an output written by `09`; `11` reads `10`'s own
+coefficient output) -- the whole back half of the sequence (formerly `05`-`13`) was renumbered
+down so the filenames are the actual run order again, no exceptions. (Separately, the original
+`12`, a standalone DiD cross-check, was cut for course scope -- see
+below -- so the former `14` was renumbered down to `12` to close that gap, before this session's
+renumbering shifted it again to its current position.) `code/supplementary/` holds one notebook,
 `08_tract_clustering.ipynb`, kept only because the web map's demographic-cluster layer reads its
 output -- it's explicitly not part of what's presented/defended as this project's modeling
 approach (k-means wasn't covered in class). Everything else that was superseded or abandoned
 during exploration -- including the prior version of this pipeline's random-search-tuned
 CatBoost, its bootstrap confidence intervals, a PyMC hierarchical model, a fixed-effects panel
-regression follow-up to `04`, and a standalone DiD cross-check (`13`) -- isn't kept as a growing
+regression follow-up to `10`, and a standalone DiD cross-check (`12`) -- isn't kept as a growing
 graveyard of scripts nobody runs; the "what was tried and why it didn't make the cut" story is
 preserved in prose below, not in files. The fixed-effects/DiD cuts specifically are a
 course-scope decision (see the note above the file tree), not a methodological one -- those
@@ -38,16 +42,16 @@ code/
   01_gtfs_pull_comparison_cities.ipynb   # GTFS/OSM/Census pull for KC, San Diego, Seattle, DC
   02_isochrones_comparison_cities.py     # r5py isochrones + tract travel times for those 4 metros
   03_comparison_cities_demographics.ipynb  # does Gotham's demographic shift generalize? (it doesn't)
-  04_attendance_model.ipynb              # baseline + transit regression, k-fold CV, GBT/SHAP robustness + team-identity leakage check
-  05_synthetic_control.ipynb             # donor pool of NWSL teams, counterfactual Gotham attendance, treated-vs-synthetic gap chart
-  06_nyc_isochrones.ipynb                # transit+walk NYC isochrones (merged w/ old 07, 16)
-  07_nyc_visualization.ipynb             # static isochrone map, reachable-population + demographic figures
-  09_gtfs_pull_new_venues.ipynb          # GTFS/OSM/Census pull for the 9 current-NWSL venues outside the 5 already covered
-  10_isochrones_new_venues.py            # r5py isochrones + tract travel times for those 9 venues (all 14 current venues now covered)
-  11_catboost_feature_engineering.ipynb  # builds the CatBoost training table: table_rank, venue/schedule features, capacity-censoring exclusion
-  12_catboost_attendance_model.ipynb     # CatBoostRegressor(iterations=1000, learning_rate=0.1, depth=6), evaluated with a random split vs. a Leave-One-Team-Out split (plain pandas, team by team) -- see "CatBoost extension" below
-  13_shap_mechanism_check.ipynb          # shap.TreeExplainer + bar/beeswarm/waterfall plots, averaged across 54 paired synthetic rows (not one cherry-pickable example) -- see "CatBoost extension" below
-  summary_tables.py                      # not numbered/graded -- joins/reshapes existing 02/03/06/07/12 outputs into 3 paper-ready CSV tables (accessibility gain by relocation, synthetic-control comparables, leakage-check summary); computes nothing new
+  04_synthetic_control.ipynb             # donor pool of NWSL teams, counterfactual Gotham attendance, treated-vs-synthetic gap chart
+  05_nyc_isochrones.ipynb                # transit+walk NYC isochrones (merged w/ old 07, 16)
+  06_nyc_visualization.ipynb             # static isochrone map, reachable-population + demographic figures
+  07_gtfs_pull_new_venues.ipynb          # GTFS/OSM/Census pull for the 9 current-NWSL venues outside the 5 already covered
+  08_isochrones_new_venues.py            # r5py isochrones + tract travel times for those 9 venues (all 14 current venues now covered)
+  09_catboost_feature_engineering.ipynb  # builds the CatBoost training table: table_rank, venue/schedule features, capacity-censoring exclusion
+  10_attendance_model.ipynb              # linear stage of the residual model: log_attendance ~ log(metro_size), clustered SE, LOVO CV -- runs after 09, before 11
+  11_catboost_attendance_model.ipynb     # CatBoost trained on 10's residual (metro_size excluded), evaluated random-split vs. Leave-One-Venue-Out, + Queens/Etihad counterfactual -- see "CatBoost extension" below
+  12_shap_mechanism_check.ipynb          # shap.TreeExplainer + bar/beeswarm/waterfall plots, averaged across 54 paired synthetic rows (not one cherry-pickable example) -- see "CatBoost extension" below
+  summary_tables.py                      # not numbered/graded -- joins/reshapes existing 02/03/05/06/11 outputs into 3 paper-ready CSV tables (accessibility gain by relocation, synthetic-control comparables, leakage-check summary); computes nothing new
   supplementary/
     08_tract_clustering.ipynb            # k-means on tract demographics + accessibility -- not part of the graded pipeline (k-means wasn't covered in class), kept only because the web map's cluster layer reads its output
 data/
@@ -56,12 +60,13 @@ data/
 output/      # final figures + model output tables
 ```
 
-`02` and `10` are the two `.py` scripts left in the main sequence, not notebooks, because each
+`02` and `08` are the two `.py` scripts left in the main sequence, not notebooks, because each
 takes a CLI argument (`<metro_key>`) and is launched as parallel background processes, one per
 metro -- a real requirement a notebook can't replicate. Everything else that used to be a script
-for the same reason (`06`, formerly two scripts merged from `07`/`16`; `09`, a linear download
-pass with no CLI argument at all) has been converted to a notebook, since none of them actually
-needed to stay one -- `09` in particular was always a plain script by choice, not requirement,
+for the same reason (`05` NYC isochrones, formerly two scripts merged from historical `07`/`16`;
+`07` GTFS pull for new venues, a linear download pass with no CLI argument at all) has been
+converted to a notebook, since none of them actually needed to stay one -- the GTFS-pull one
+(`07`) in particular was always a plain script by choice, not requirement,
 which just meant it didn't match the rest of the sequence's format.
 
 
@@ -90,29 +95,21 @@ all. The shift is specific to Gotham's particular geography (leaving industrial 
 for a site an express subway ride from Manhattan), not a general consequence of moving toward
 transit accessibility.
 
-**04, attendance model**: extended `nwsl-project`'s team-season regression with
-`catchment_pop_60min` (this project's own r5py-isochrone accessibility measure, the same one
-CatBoost calls `metro_size` in `11`/`12` -- an earlier version of this notebook used
-`nearest_stop_distance_mi`, a vendored OSM stop-distance figure that predates this project's own
-isochrone pipeline and was never the same accessibility measure CatBoost uses; switched for
-consistency), dropping `has_rail_access` after it turned out to be identified off just 2-3
-teams. Because `catchment_pop_60min` is written only to `output/venue_catchment_population.csv`
-by `11`, **`04` now has to run after `11`**, breaking the otherwise strict 01-13 run order --
-called out in `04`'s own intro cell rather than left implicit. COVID seasons (2020-2021)
-excluded throughout. Cross-validated R^2 is weak (~-0.02 to 0.16 depending on spec) once COVID
-years are properly excluded, reported as a real limitation, not smoothed over.
-`catchment_pop_60min` also correlates more with `market_size_log` (0.70) than
-`nearest_stop_distance_mi` did (0.22); rather than let that distort `market_size_log`'s
-coefficient, `market_size_log` is dropped from the extended spec entirely (kept in the baseline,
-so the baseline still matches `nwsl-project`'s original regression exactly). `dist_miles` is
-also dropped from the extended spec, for the same reason -- its coefficient was tiny and
-sign-unstable across specs, not carrying real signal once `catchment_pop_60min` is in the model.
-The extended model's predictors are `ppg`, `new_stadium_flag`, `rivalry_flag`, and
-`catchment_pop_60min`. This notebook stops at the GBT+SHAP leakage check (below) -- a
-fixed-effects follow-up that used to continue past it was cut for course scope (panel regression
-with clustered/robust SEs wasn't taught); see "Known limitations."
+**10, attendance model -- rebuilt 2026-08-25 as the linear stage of a residual model.** `10`
+used to run its own team-season baseline/extended-linear/GBT comparison on a retired data
+source (`nwsl-project`'s `games_with_transit.csv`). That's gone. `10` is now a single, narrow
+model: `log_attendance ~ log(metro_size)` (game-level, same `catboost_training_table.csv`
+CatBoost uses), clustered SE by team, coefficient +0.177 (95% CI [0.009, 0.345], p=0.038),
+published to `output/attendance_linear_model_coefficients.csv` for `11` to consume. `log()`
+specifically, not raw `metro_size` -- a raw-unit spec extrapolated to Etihad Park's catchment
+(2.2x the training max) predicts an implausible ~47,600 fans; log-transforming the predictor
+keeps that same extrapolation to only ~0.78 log-units past the training max, small enough to
+trust. `metro_size` is written only to `output/venue_catchment_population.csv` by `09`, so `10`
+still has to run after `09` -- and now before `11` too, since `11` reads `10`'s coefficient.
+Standalone fit is deliberately weak (naive R^2 0.15, Leave-One-Venue-Out pooled R^2 -0.04) -- this
+model only ever carries the one feature CatBoost's residual stage can't handle; see `11`.
 
-**05, synthetic control**: donor pool of 8 non-relocating NWSL teams, weighted to match
+**04, synthetic control**: donor pool of 8 non-relocating NWSL teams, weighted to match
 Gotham's 2022-2026 trajectory (North Carolina Courage, Orlando Pride, Washington Spirit carry
 most of the weight). Projects a 2027 no-move baseline plus **2** accessibility-driven scenarios
 (originally 3 -- the mid and high lift estimates both projected past Etihad Park's 25,000
@@ -129,17 +126,17 @@ the standard SCM "gap chart" (treated vs. synthetic, vertical line at the move d
 after it) as `output/synthetic_control_gap_plot.png` -- since Etihad Park hasn't opened yet, the
 post-2026 portion is explicitly labeled as a projection, not observed data.
 
-**06, NYC isochrones**: one r5py `TransportNetwork` build (merged from the former standalone `07`
+**05, NYC isochrones**: one r5py `TransportNetwork` build (merged from the former standalone `07`
 and `16`, once both were just transit+walk builds with nothing left to keep them separate).
 Uses `speed_walking=5.0` km/h (see "Walking speed correction" below) -- a real fix, not the
 original build. Covers Red Bull Arena vs. Etihad Park at 30/45/60/90 min -- the
-reachable-population numbers `07` and `08` are built on. (The Yankee Stadium/Citi Field
+reachable-population numbers `06` and `supplementary/08` are built on. (The Yankee Stadium/Citi Field
 comparison this used to also build isochrones for was removed -- see `supplementary/09`,
 `supplementary/10`. A walk-only isochrone build that used to isolate how much of the
 accessibility gain required transit vs. was just walkable was cut too -- redundant once it
 wasn't feeding anything beyond a single supporting chart.)
 
-**07, NYC visualization**: static isochrone map (now 30/45/60/90 min) with a real basemap and
+**06, NYC visualization**: static isochrone map (now 30/45/60/90 min) with a real basemap and
 actual transit lines (subway/PATH/NJ Transit Rail/LIRR in their official colors), a
 reachable-population bar chart, and the demographic breakdown of who gains access.
 
@@ -152,18 +149,21 @@ directly on the 7 train, a single-seat ride into the center of Midtown, so it re
 Manhattan by 60 min. That's a real structural advantage of the Willets Point site's transit
 connection, not an artifact.
 
-**GBT + SHAP robustness check (added to 04)**: a gradient boosted tree model on the same
-features hit a 5-fold CV R^2 of 0.512, dramatically higher than the linear model's 0.156 on
-identical folds. SHAP confirms `catchment_pop_60min_100k` is that GBT model's single
-largest-magnitude driver. That gap turned out to be team-identity leakage, not real signal:
-grouping the CV folds by team (so no team's seasons span train and test) collapses both models
-to well below a mean-only baseline (GBT: -1.875, Linear: -2.258). This means the panel and
-feature set show no demonstrated ability to predict an unseen team's attendance at all, a
-materially stronger limitation than "weak fit," and it retroactively means the earlier
-row-shuffled CV numbers in `04` were optimistic too. Documented in place rather than deleted so
-the investigation is visible in the notebook, not just the conclusion.
+**Leave-One-Venue-Out, not Leave-One-Team-Out (changed 2026-08-25).** The old GBT+SHAP
+leakage check (team-grouped CV on the retired spec) is gone along with the models it checked.
+Both `10` and `11` now validate against **Leave-One-Venue-Out (LOVO)**: hold out one (team,
+venue) pair at a time -- 21 of 22 such pairs in this panel have >=10 games, and 6 teams have
+real venue moves -- train on everyone else, pool every held-out group's predictions, score once.
+Chosen over team-level LOTO deliberately: LOTO tests "can this model handle a team it's never
+seen at all," which isn't this project's actual question, since Gotham (the team this project
+cares about) is always in-sample -- only the *venue* (Etihad Park) is genuinely novel. LOVO is
+a closer analog to that real deployment question. The honesty story LOTO used to tell still
+holds: `10`'s linear stage alone barely moves (naive R^2 0.15 -> LOVO R^2 -0.04), and `11`'s
+combined model collapses hard (naive R^2 0.78, r 0.88 -> LOVO R^2 -0.17, r 0.13) -- this panel
+and feature set still show no demonstrated ability to generalize to an unfamiliar venue, a
+materially stronger limitation than "weak fit."
 
-**Cut for course scope: fixed-effects follow-up.** `04` originally continued past the GBT/SHAP
+**Cut for course scope: fixed-effects follow-up.** `10` originally continued past the GBT/SHAP
 leakage check with a two-part fixed-effects follow-up -- a team+season-dummy panel regression
 (NWSL+MLS, 399 team-seasons, clustered/HC1 SEs) confirming the accessibility coefficient's
 direction but not its significance (p=0.793), then the same check with real isochrone-based
@@ -174,13 +174,13 @@ course work. The substantive finding they produced (the number of relocation eve
 a hard ceiling no amount of additional isochrone data moves) still holds and is carried forward
 qualitatively below and in "Known limitations," just not as a p-value.
 
-**Walking speed correction (06, 02)**: r5py's default `speed_walking` is 3.6 km/h (~2.2
+**Walking speed correction (05, 02)**: r5py's default `speed_walking` is 3.6 km/h (~2.2
 mph), noticeably slower than the ~5 km/h real-world walking pace most estimates (Google Maps
 etc.) assume. Confirmed directly with `r5py.DetailedItineraries` on a real route (Red Bull
 Arena -> Harrison PATH station: a genuine 1,001m walked path for a 660m straight-line distance,
 normal ~1.5x circuity, but 16:44 at the default speed vs. ~12 min at a realistic pace). Every
 walk leg in every isochrone built with the default was inflated the same way. Fixed everywhere
-now (`speed_walking=5.0` in `06` and `02`) -- Red Bull Arena's 60-min reach nearly doubled
+now (`speed_walking=5.0` in `05` and `02`) -- Red Bull Arena's 60-min reach nearly doubled
 (620K -> 1.05M) once walking wasn't artificially slow, and the 4 comparison-city builds were
 rebuilt with the same fix so `03`'s cross-metro comparison is on consistent footing.
 
@@ -194,7 +194,7 @@ demographic-cluster layer reads its output, not as a second thing to defend.
 
 **Headline result**: Etihad Park reaches 3.20M people within 60 minutes (was 2.27M before the
 walking-speed fix), 3.0x Red Bull Arena's corrected 1.05M -- a real, striking descriptive fact
-about the site choice on its own. `05`'s synthetic control range (68.8%-103.5%+ attendance
+about the site choice on its own. `04`'s synthetic control range (68.8%-103.5%+ attendance
 lift, capped at Etihad Park's 25,000 capacity) is this project's causal claim for what that
 accessibility gain does to attendance; it's a 2-point scenario range from 3 comparable
 relocations, not a precise point estimate, and is reported as such rather than smoothed into a
@@ -210,8 +210,8 @@ and the `15` full-league notebook were deleted; `supplementary/13`, `14`, `14b` 
 California/San Diego's shared resources were preserved during the cleanup (`San Jose`/`Los
 Angeles` used the same `california-latest.osm.pbf` and CA tract data San Diego needs).
 
-**09-13, CatBoost extension**: real isochrones now cover all 14 current NWSL venues (was 5) --
-`09`/`10` fill in the 9 that weren't already built for a relocation comparison. `11` builds a
+**07-12, CatBoost extension**: real isochrones now cover all 14 current NWSL venues (was 5) --
+`07`/`08` fill in the 9 that weren't already built for a relocation comparison. `09` builds a
 game-level training table (`table_rank`/`opponent_table_rank` as running, no-leakage standings;
 `games_since_venue_open`; venue supply-side features) with one real fix worth naming:
 **~8% of the panel had capacity-censored attendance** -- several teams (confirmed directly for
@@ -221,12 +221,17 @@ number instead of real turnout. Detected by flagging any exact attendance value 
 times within a team-season at/near listed capacity, and excluded from training -- a real,
 previously undocumented data-quality finding, not just a modeling footnote.
 
-`12` fits a single `CatBoostRegressor(iterations=1000, learning_rate=0.1, depth=6)`, evaluated
-two ways: a plain random `train_test_split` first, then a Leave-One-Team-Out split (a plain loop
-over teams -- train on every other team, test on the held-out one), the same leakage check `04`
-already ran for its GBT spec. LOTO's pooled Pearson r is the headline generalization number
-(printed by the script, along with a `sns.regplot` of actual vs. predicted); it's expected to
-land well below the random split's r, for the same team-identity-leakage reason `04` found.
+**`11` -- rebuilt 2026-08-25 as a residual model, not a single CatBoost fit.** CatBoost trained
+directly on `log_attendance` (the original design) had a real bug: it used `metro_size` as one
+of its features, and tree models can't extrapolate past the range of values they were trained
+on -- capping `metro_size` at the training max vs. feeding it Etihad Park's real value (2.2x
+that max) produced the *identical* prediction, silently. Fix: CatBoost now trains on the
+**residual** left over after `10`'s linear stage (`residual = log_attendance - linear_pred`),
+using every other feature *except* `metro_size` -- accessibility is handled entirely by the
+linear stage, which can extrapolate; CatBoost only ever sees in-range features. Final
+prediction = `exp(linear_pred + catboost_residual_pred)`. Evaluated the same two ways as before
+(random `train_test_split`, then Leave-One-Venue-Out -- see above), on the *combined* model: r
+drops from 0.88 (random split) to 0.13 (LOVO), R^2 from 0.78 to -0.17.
 Then, in the same script, the Queens counterfactual (synthetic Gotham/Etihad Park schedule) --
 a single point prediction, against `year=2026` specifically, not a hypothetical 2027, since tree
 models can't extrapolate a trend past years they've seen, and comparing against Gotham's full
@@ -234,35 +239,39 @@ models can't extrapolate a trend past years they've seen, and comparing against 
 measuring against a mostly-irrelevant, deflated baseline from a completely different era of the
 team.
 
-**Bottom line**: CatBoost's role here is to corroborate the *mechanism* behind `05`'s synthetic
-control range, not to compete with it as a second point estimate. Its Queens/Etihad Park
-prediction points the same direction as the synthetic control scenarios, and `13`'s SHAP check
-confirms `metro_size` is the largest correctly-signed positive driver of that
-prediction -- independent evidence, from an unrelated model class, that accessibility is
-plausibly doing the work, not just correlated with it. `metro_size` (r5py isochrone catchment
-population) is the only accessibility feature in the model -- an earlier version also included
+**Bottom line**: CatBoost (now the residual stage of the two-part model above) exists to
+corroborate the *mechanism* behind `04`'s synthetic control range, not to compete with it as a
+second point estimate. Its Queens/Etihad Park prediction (linear + residual, ~12,800-13,700
+fans, before the wide CI from `10`'s accessibility coefficient is accounted for) points the same
+direction as the synthetic control scenarios. Accessibility's contribution to that prediction no
+longer shows up as a CatBoost SHAP value at all -- since 2026-08-25 it's `10`'s linear
+coefficient (`12` decomposes the RBA->Etihad shift as linear component + residual SHAP, summed,
+rather than pure SHAP). `metro_size` (r5py isochrone catchment population, log-transformed) is
+the only accessibility feature anywhere in the two-part model -- an earlier version also included
 `transit_accessibility`, a composite built from stop counts/distances vendored wholesale from
 `nwsl_transportation`'s Overpass API pull rather than computed anywhere in this project, and it
 was cut for that reason. The reported number for "what will Queens
-attendance be" is still `05`'s scenario range, not this model's point prediction: both hit the
+attendance be" is still `04`'s scenario range, not this model's point prediction: both hit the
 same wall (there have only ever been ~4-5 real NWSL relocation events to learn an effect size
 from), and a range is the honest way to report an estimate built on that little data.
 
-**Two more features were added to `11`/`12` after the first pass, and one of them exposed a real
+**Two more features were added to `09`/`11` after the first pass, and one of them exposed a real
 data bug worth its own paragraph.** `venue_name` was kept (dropping team/venue identity was
 tested and made LOTO generalization worse), but `dedicated_soccer_facility` and
 `shared_with_other_league` were added alongside it -- both fully computable for every venue
 (0% missing, unlike `roof`/`turf`, which have a real 28.5% gap hitting current venues like
 Snapdragon Stadium and were tried and dropped for that reason). The first version of
 `shared_with_other_league` sent almost the entire predicted Queens shift through that one flag
-in `13`'s TreeSHAP check -- which led to checking *why*, and finding **Red Bull Arena itself was
+in `12`'s TreeSHAP check -- which led to checking *why*, and finding **Red Bull Arena itself was
 mislabeled "not shared"** in the wiki-scraped `Team_nwsl`/`Team_mls` columns, despite being the
-New York Red Bulls' actual MLS home. `11` was fixed to compute `shared_with_other_league` from
+New York Red Bulls' actual MLS home. `09` was fixed to compute `shared_with_other_league` from
 the reliable `primary_team_id`/`secondary_team_id` columns instead (5 of 21 venues were
 mislabeled this way). After the fix, `shared_with_other_league`'s SHAP contribution collapsed to
-~0 (confirming it was the bug, not a real effect), and `metro_size` became the
-single largest correctly-signed positive contributor -- a real, isolated mechanism confirmation,
-no longer confounded.
+~0 (confirming it was the bug, not a real effect) -- a real, isolated mechanism confirmation, no
+longer confounded. (At the time this fix landed, `metro_size` was still a CatBoost feature and
+became the largest correctly-signed positive contributor once the bug was gone; as of the
+2026-08-25 residual-model rewrite, `metro_size` lives entirely in `10`'s linear stage instead --
+see "Bottom line" below.)
 
 **A parallel NWSL+MLS pooled model was built, evaluated, and deleted** (not archived --
 `supplementary/16-24` no longer exist): expanding to 27 MLS teams gives 16 real relocation
@@ -294,24 +303,24 @@ line around just to re-diagnose the same issue twice stopped being worth it.
   coefficient's direction was positive and consistent across every specification tried, but
   never statistically significant, because ~4-5 real relocation events is a hard sample-size
   ceiling no amount of additional feature or isochrone precision moves. That finding is real and
-  is carried forward qualitatively (see `05`'s and the CatBoost section's write-ups above), just
+  is carried forward qualitatively (see `04`'s and the CatBoost section's write-ups above), just
   not as a citable p-value, since panel econometrics wasn't covered in QSS 45. The removed
   notebook content is recoverable from git history if a future version of this course covers it.
-- `04`'s attendance model shows no demonstrated ability to generalize to a team it hasn't seen
-  (team-grouped CV R^2 is negative for both the linear and GBT specs), not just weak predictive
-  power -- this is from the GBT+SHAP leakage check, which stayed in scope (gradient boosting and
-  SHAP were both taught).
-- `05`'s accessibility-driven lift range comes from only 3 comparable relocations (KC excluded,
+- `10`/`11`'s attendance models show no demonstrated ability to generalize to an unfamiliar venue
+  (Leave-One-Venue-Out pooled R^2 is negative for both the linear stage alone and the combined
+  linear+CatBoost-residual model), not just weak predictive power.
+- `04`'s accessibility-driven lift range comes from only 3 comparable relocations (KC excluded,
   its attendance change is capacity-suppressed) -- a small-sample descriptive range, not an
   inferential estimate with a confidence interval.
 - `03`'s finding rules out a general "accessibility whitens/enriches fanbases" mechanism, but
   with only 5 relocations total, it can't rule out smaller or more conditional effects either.
-- `12`'s CatBoost model corroborates `05`'s synthetic control range in direction and mechanism
-  (SHAP: `metro_size` is the top positive driver) but shouldn't be read as
-  independent confirmation of a precise magnitude -- LOTO generalization is real but modest, and
-  both approaches hit the same ~4-5-relocation-event ceiling regardless of how precisely
-  accessibility is measured.
+- `11`'s combined model corroborates `04`'s synthetic control range in direction (accessibility's
+  effect now comes from `10`'s linear coefficient, not a CatBoost SHAP value -- see "Bottom
+  line" above) but shouldn't be read as independent confirmation of a precise magnitude -- LOVO
+  generalization is weak, the linear coefficient's own 95% CI is wide (implied attendance range
+  roughly 9k-25k, capacity-capped at the top), and both approaches hit the same
+  ~4-5-relocation-event ceiling regardless of how precisely accessibility is measured.
 - ~8% of the full attendance panel (NWSL + MLS) is capacity-censored -- teams reporting a fixed
   "sold out" figure instead of real turnout, confirmed directly for Kansas City Current (every
-  2024-2026 home game: identical 11,500). Excluded from `11`'s training table; worth checking
+  2024-2026 home game: identical 11,500). Excluded from `09`'s training table; worth checking
   for in any future extension of this panel, not assumed fixed once and forgotten.

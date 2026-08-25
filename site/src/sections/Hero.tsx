@@ -24,11 +24,8 @@ export default function Hero() {
             </p>
             <p className="mt-5 text-base text-[var(--color-ink)]/80 leading-relaxed max-w-md">
               Gotham FC is moving from Red Bull Arena in Harrison, NJ to Etihad Park in Queens, NY in 2027. 
-              The new stadium, shared with NYCFC at Willets Point, Queens is a direct ride on the 7 train from Midtown Manhattan,
-              with a 60-minute reach of 3.2 million people. 
-              We measure how much bigger that reach really is, and use
-              regression, gradient-boosted trees, and synthetic control to estimate how it'll
-              impact attendance.
+              The new stadium has a 60-minute reach of 3.2 million people. 
+              Check out how it'll impact attendance.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a

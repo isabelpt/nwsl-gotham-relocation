@@ -1,5 +1,4 @@
 import SectionHeading from '../components/SectionHeading'
-import StadiumFillViz from '../components/StadiumFillViz'
 
 const TAKEAWAYS = [
   {
@@ -51,10 +50,6 @@ export default function TakeawaySection() {
               <p className="font-mono-label text-[10px] text-white/60 mt-0.5">2027 capacity-fill — estimated range</p>
             </div>
           </div>
-        </div>
-
-        <div className="mt-10 max-w-3xl mx-auto">
-          <StadiumFillViz />
         </div>
 
         {/* Scannable takeaway cards: one bold, large-type sentence each, with the

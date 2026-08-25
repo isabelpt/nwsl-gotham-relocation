@@ -1,5 +1,3 @@
-model,features,naive_scheme,naive_metric,naive_value,grouped_scheme,grouped_metric,grouped_value,source
-"Linear (baseline, 5 predictors)","ppg, market_size_log, new_stadium_flag, rivalry_flag, dist_miles",row-shuffled 5-fold KFold,R^2,-0.018,-,-,,04
-"Linear (extended, +transit)","ppg, new_stadium_flag, rivalry_flag, catchment_pop_60min_100k",row-shuffled 5-fold KFold,R^2,0.156,GroupKFold (by team),R^2,-2.258,04
-"GBT (extended, same features)",same as Linear extended,row-shuffled 5-fold KFold,R^2,0.512,GroupKFold (by team),R^2,-1.875,04
-CatBoost (full feature set),"table_rank, venue/schedule, metro_size, etc.",random 80/20 split,Pearson r,0.862,Leave-One-Team-Out,pooled Pearson r,0.44,12
+model,features,naive_scheme,naive_r2,naive_pearson_r,naive_mae,naive_rmse,grouped_scheme,grouped_r2,grouped_pearson_r,grouped_mae,grouped_rmse,source
+"Linear (accessibility only, clustered SE)",log(metro_size),naive (in-sample),0.1537012307844149,0.3920474853693297,4067.620376968284,5425.691121844096,Leave-One-Venue-Out (pooled),-0.04466813983685,0.1700718540696471,4462.882166287884,5847.530663742363,10
+Linear + CatBoost residual (combined model),"log(metro_size) [linear] + table_rank, venue/schedule, stadium_capacity, etc. [CatBoost residual]",naive (random 80/20 split),0.7781997306225952,0.883456793969961,1635.0193335510216,2453.2917726935134,Leave-One-Venue-Out (pooled),-0.1671928587591582,0.1258308752995215,4586.571384038508,6307.992515416621,10+11

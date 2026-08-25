@@ -9,12 +9,12 @@ const STEPS = [
   {
     step: '02',
     title: 'Feature engineering',
-    text: "Reachable population within a 60-min transit+walk trip (catchment_pop_60min) per venue, joined to nwsl-project's team-season table alongside ppg, market size, rivalry, and new-stadium flags.",
+    text: "Reachable population within a 60-min transit+walk trip (metro_size) per venue, joined to a game-level table (table_rank, opponent, schedule, venue/capacity features) built for every current NWSL venue.",
   },
   {
     step: '03',
-    title: 'Regression & SHAP Analysis',
-    text: "OLS and gradient-boosted trees predict log(attendance). Checked with KFold and GroupKFold (holding a whole team out) to see if the fit survives when applied to an unseen team.",
+    title: 'Linear + CatBoost residual model',
+    text: "A linear stage predicts log(attendance) from log(metro_size) alone — log-transformed so it can extrapolate safely to Etihad Park's catchment population, since tree models can't. CatBoost then predicts the leftover residual from every other feature. Checked with Leave-One-Venue-Out (holding one team/venue pair out at a time) to see if the fit survives on a venue it hasn't seen.",
   },
   {
     step: '04',
@@ -29,9 +29,10 @@ export default function MethodSection() {
       <div className="max-w-5xl mx-auto px-6">
         <SectionHeading index="03" title="The Method" eyebrow="Approach" />
         <p className="text-[var(--color-ink)]/85 leading-relaxed mb-10">
-          Team-season attendance data (2016–2026, COVID seasons 2020–2021 excluded) feeds two
-          parts: predictive attendance models (OLS-Regression, Gradient-Boosted Trees, CatBoost) with SHAP analysis of feature importance, 
-          and a synthetic-control comparison against the other NWSL teams that recently relocated. 
+          Game-level attendance data (2016–2026, COVID seasons 2020–2021 excluded) feeds two
+          parts: a predictive attendance model (a linear accessibility stage plus CatBoost on the
+          residual, with SHAP analysis of the residual's own drivers), and a synthetic-control
+          comparison against the other NWSL teams that recently relocated.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {STEPS.map((s) => (

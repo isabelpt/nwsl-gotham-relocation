@@ -30,6 +30,11 @@ const BASEMAP_STYLE: StyleSpecification = {
 }
 
 const NYC_CENTER: [number, number] = [-73.97, 40.72]
+// Keeps the map from ever zooming/panning out to blank grey space beyond the metro area.
+const NYC_METRO_BOUNDS: [[number, number], [number, number]] = [
+  [-74.9, 40.3],
+  [-73.1, 41.2],
+]
 const UNREACHABLE = 999 // sentinel for tracts beyond r5py's routing window (null minutes)
 
 function rbaField() {
@@ -85,8 +90,12 @@ const IsochroneMap = forwardRef<IsochroneMapHandle, Props>(function IsochroneMap
       style: BASEMAP_STYLE,
       center: NYC_CENTER,
       zoom: 9.3,
-      minZoom: 8,
+      minZoom: 9,
       maxZoom: 14,
+      maxBounds: NYC_METRO_BOUNDS,
+      // Requires ctrl/cmd + scroll to zoom, so an ordinary page-scroll that happens to pass
+      // over the map scrolls the page instead of yanking the map's zoom level out.
+      cooperativeGestures: true,
     })
     mapRef.current = map
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
