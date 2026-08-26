@@ -1,5 +1,5 @@
 /**
- * A narrative turn between figure blocks — states the question or claim that
+ * A narrative turn between figure blocks. States the question or claim that
  * the next figure answers. Styled like the section headings (small rule +
  * serif line), not a blockquote, so it doesn't read as something someone said.
  */

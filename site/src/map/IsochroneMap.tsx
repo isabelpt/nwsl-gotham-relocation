@@ -203,7 +203,7 @@ const IsochroneMap = forwardRef<IsochroneMapHandle, Props>(function IsochroneMap
         const res = await fetch(url.toString())
         results = await res.json()
       } catch {
-        return { ok: false, error: "Couldn't reach the geocoder — check your connection." }
+        return { ok: false, error: "Couldn't reach the geocoder. Check your connection." }
       }
       if (results.length === 0) {
         return { ok: false, error: 'No match found in the NYC metro area.' }

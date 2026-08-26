@@ -69,7 +69,7 @@ export default function App() {
           Gotham FC's Move to Queens
         </h1>
         <p style={{ fontSize: "0.85rem", color: "#555", marginTop: 0 }}>
-          Transit + walk accessibility, Sports Illustrated Stadium vs. Etihad Park (opening 2027)
+          Transit + walk accessibility, Sports Illustrated Stadium vs. Etihad Park (opening 2028)
         </p>
 
         <form onSubmit={handleSearch} style={{ marginTop: "1rem", display: "flex", gap: "0.4rem" }}>

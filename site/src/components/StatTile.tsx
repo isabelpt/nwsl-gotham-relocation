@@ -6,7 +6,7 @@ export default function StatTile({
   value: string
   label: string
   /** 'measured' = directly computed from data (isochrones, ratios). 'estimate' = a
-   * modeled/projected figure this project reports as a range, not a fact — styled
+   * modeled/projected figure this project reports as a range, not a fact. Styled
    * distinctly (dashed border, softer fill, an "est." flag) so a skimming reader
    * doesn't mistake a scenario range for a measured number. */
   variant?: 'measured' | 'estimate'

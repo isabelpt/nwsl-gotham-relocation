@@ -10,7 +10,7 @@ export default function FigureCard({
   alt: string
   caption: string
   label?: string
-  /** Bold, one-line interpretation shown above the chart — the argument the figure is making, not a description of its axes. */
+  /** Bold, one-line interpretation shown above the chart: the argument the figure is making, not a description of its axes. */
   claim?: string
   /** Short badge (e.g. "vs. MLS") flagging that this figure includes the cross-league comparison. */
   benchmark?: string

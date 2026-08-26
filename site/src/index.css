@@ -11,6 +11,15 @@
   --color-accent-soft: #ece5f9;
   --color-line: #e3ddd3;
 
+  /* Verdict colors for the hypothesis banners. Muted enough to sit next to the
+     purple accent without turning the page into a traffic light. */
+  --color-yes: #2f6b4f;
+  --color-yes-soft: #e4f0e9;
+  --color-maybe: #8a6410;
+  --color-maybe-soft: #f7eeda;
+  --color-no: #9b3d3d;
+  --color-no-soft: #f6e5e5;
+
   --font-serif: "Source Serif 4", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -25,6 +34,12 @@
   --color-accent: var(--color-accent);
   --color-accent-soft: var(--color-accent-soft);
   --color-line: var(--color-line);
+  --color-yes: var(--color-yes);
+  --color-yes-soft: var(--color-yes-soft);
+  --color-maybe: var(--color-maybe);
+  --color-maybe-soft: var(--color-maybe-soft);
+  --color-no: var(--color-no);
+  --color-no-soft: var(--color-no-soft);
   --font-serif: var(--font-serif);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);

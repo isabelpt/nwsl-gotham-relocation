@@ -1,138 +1,34 @@
 import SectionHeading from '../components/SectionHeading'
-import ResultsQuestionHeading from '../components/ResultsQuestionHeading'
-import FigureCard from '../components/FigureCard'
+import HypothesisVerdict from '../components/HypothesisVerdict'
 import TransitionHeading from '../components/TransitionHeading'
+import FigureCard from '../components/FigureCard'
 import AccessibilityMap from '../components/AccessibilityMap'
 import ModelComparisonTable from '../components/ModelComparisonTable'
-import ScenarioBars from '../components/ScenarioBars'
-import StatFlip from '../components/StatFlip'
-import CatBoostModelsExplainer from '../components/CatBoostModelsExplainer'
+import RelocationTable from '../components/RelocationTable'
 import MechanismExplainer from '../components/MechanismExplainer'
-import QueensPredictionTable from '../components/QueensPredictionTable'
-import lovoPerVenueMae from '../assets/figures/catboost-lovo-per-venue-mae.png'
+import PlaceboValidation from '../components/PlaceboValidation'
 import StadiumFillViz from '../components/StadiumFillViz'
+import lovoPerVenueMae from '../assets/figures/catboost-lovo-per-venue-mae.png'
+import accessibilityCoefficient from '../assets/figures/accessibility-coefficient.png'
 
 export default function ResultsSection() {
   return (
     <section id="results" className="border-t border-[var(--color-line)] py-16">
       <div className="max-w-5xl mx-auto px-6">
         <SectionHeading index="04" title="The Results" eyebrow="Findings" />
-        <ResultsQuestionHeading
-          index="Q1"
-          question="Building a bad model was easy"
-          sub="Does regressing attendance on accessibility work? Yes, but only until the model is asked to predict a venue it's never seen."
-        />
 
-        {/* <div className="mb-6">
-          <StatFlip
-            label="GBT model, R² on an unseen team"
-            from="0.51"
-            to="−1.88"
-            fromLabel="naive 80/20 split"
-            toLabel="GroupKFold (honest)"
-          />
-        </div> */}
-        <div className="mb-14">
+        {/* ---------- Setup: how big is the change we're testing? ---------- */}
+        <p className="text-[var(--color-ink)]/85 leading-relaxed mb-6 max-w-3xl">
+          Let's make sure accessibility actually increases, before we proceed.
+          At the 60-minute mark Etihad Park reaches <strong>3.20 million</strong>{' '}
+          people against Sports Illustrated Stadium's <strong>1.05 million</strong>. The old stadium's only
+          link to Manhattan is PATH, and it reaches 11% of the borough in an hour. Etihad Park sits on the
+          7 train and reaches 71%.
+        </p>
+
+        <div className="mb-4">
           <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
-            Table 1 — both stages of the current model, naive fit vs. held-out-venue fit
-          </p>
-          <ModelComparisonTable />
-          <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mt-3">
-            Neither stage generalizes cleanly to a venue it hasn't seen. The combined model's R² drops from
-            0.78 (random split) to −0.17 (Leave-One-Venue-Out) — worse than guessing the mean once a venue
-            is genuinely unfamiliar. This isn't a reason to distrust the model's own coefficients (the
-            accessibility effect is estimated separately, with its own honest confidence interval — see
-            Figure 6 below), but it is a reason to report the Queens prediction as a wide range, not a
-            precise point estimate.
-          </p>
-        </div>
-
-        <div className="mb-14">
-          <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
-            Figure 1 — Held-out-venue error, by venue
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FigureCard
-              src={lovoPerVenueMae}
-              alt="Horizontal bar chart: mean absolute error in fans for each of 22 (team, venue) pairs under Leave-One-Venue-Out cross-validation, sorted from lowest to highest error, R² labeled per venue"
-              caption="Each bar is one real venue, held out entirely from training and predicted using only the other 21 venues' games. Error varies enormously by venue — from under 1,500 fans for some to over 9,000 for others — and R² (labeled per bar) is a misleading way to rank them: a low-variance venue can post a terrible R² on a small absolute miss, while a genuinely volatile venue can post a better R² on a much larger one."
-            />
-            <div className="flex flex-col justify-center">
-              <p className="font-serif-heading text-xl font-semibold text-[var(--color-primary-deep)] leading-snug mb-3">
-                Why this matters
-              </p>
-              <ul className="space-y-2.5">
-                <li className="flex gap-2.5 text-[15px] text-[var(--color-ink)]/90 leading-snug">
-                  <span className="shrink-0 text-[var(--color-accent)] font-semibold" aria-hidden>
-                    →
-                  </span>
-                  <span>
-                    The model's own accessibility coefficient looks real (positive, similar in size to
-                    other established effects, and stable whether estimated at the game level with
-                    clustered standard errors or aggregated to the team-season) — but that's a separate
-                    claim from "the model predicts a new venue's attendance well."
-                  </span>
-                </li>
-                <li className="flex gap-2.5 text-[15px] text-[var(--color-ink)]/90 leading-snug">
-                  <span className="shrink-0 text-[var(--color-accent)] font-semibold" aria-hidden>
-                    →
-                  </span>
-                  <span>
-                    Both stages hold up fine under a random split, but collapse under Leave-One-Venue-Out:
-                    R² goes from 0.78 to −0.17 for the combined model, 0.15 to −0.04 for the linear stage
-                    alone.
-                  </span>
-                </li>
-                <li className="flex gap-2.5 text-[15px] text-[var(--color-ink)]/90 leading-snug">
-                  <span className="shrink-0 text-[var(--color-accent)] font-semibold" aria-hidden>
-                    →
-                  </span>
-                  <span>
-                    A model that can't reliably predict a venue it's already seen a version of can't be
-                    trusted to give a precise point prediction for Etihad Park — which is why the Queens
-                    prediction below is reported as a range.
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        
-
-        <TransitionHeading>Building a stronger model: CatBoost iterations</TransitionHeading>
-
-        <div className="mb-14">
-          <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mb-5">
-            There are three iterations of the CatBoost models and only the third one ever touches the Queens prediction. The only difference is how they are trained.
-          </p>
-          <CatBoostModelsExplainer />
-        </div>
-
-        {/* <TransitionHeading>What's literally inside one of these trees?</TransitionHeading>
-
-        <div className="mb-6">
-          <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
-            Figure 2 — Inside tree 1 of 60
-          </p>
-          <FigureCard
-            src={gbtTreeWalkthrough}
-            alt="One depth-2 tree from the GBT ensemble: root split on catchment_pop_60min_100k, second split on new_stadium_flag, four leaves with small log-attendance nudges"
-            claim="A brand-new stadium gets a lower nudge than an established one — in tree 1 of 60, before any accessibility feature even separates them."
-            caption="This is a real tree from the GBT ensemble (60 trees total, each depth 2 — kept shallow specifically to limit how much a tree can memorize about team identity). Both Etihad Park (3.2M reachable) and Sports Illustrated Stadium (1.05M) clear the root's accessibility threshold, so this particular tree can't tell them apart on accessibility at all — it's the second split, on new_stadium_flag, that separates them, and it pushes Gotham's first season at a new venue down (+0.159), not up (+0.731 for an established stadium). The final prediction sums a small nudge like this from all 60 trees, shrunk by a 0.05 learning rate — no single tree is the whole story, but this one already echoes the team_venue_tenure finding from the SHAP check below, independently."
-          />
-        </div> */}
-
-        {/* ============================================================ */}
-        <ResultsQuestionHeading
-          index="Q2"
-          question="How much is accessibility improving?"
-          sub="Quantifying the size of Gotham's accessibility increase to see what change the models are being fed."
-        />
-
-        <div className="mb-6">
-          <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
-            Figure 3 — Etihad Park's reach vs. Sports Illustrated Stadium's
+            Figure 1 &middot; Who can get there in an hour
           </p>
           <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen flex justify-center">
             <div className="w-full max-w-[1400px] px-6">
@@ -140,122 +36,241 @@ export default function ResultsSection() {
             </div>
           </div>
           <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mt-3">
-            Purple tracts reach Etihad Park faster than Sports Illustrated Stadium, while red tracts are the reverse.
-            At the 60-minute threshold, Etihad Park reaches <strong>3.20M</strong>{' '}
-            people, <strong>3.0×</strong> Sports Illustrated Stadium's <strong>1.05M</strong> (both numbers
-            already corrected for r5py's too-slow default walking speed).
-            Sports Illustrated Stadium's only connection to Manhattan connection is PATH, while Etihad Park
-            has direct access to the 7 train. 71% of Manhattan is reachable from Etihad Park within 60 minutes,
-            versus 11% from Sports Illustrated Stadium. Drag the threshold slider or search an address to
-            explore the comparison yourself.
+            Purple tracts reach Etihad Park faster, red tracts reach Sports Illustrated Stadium faster. Drag
+            the slider or search an address to try it yourself. The reachable population also gets 14.1
+            points whiter and 18.6% wealthier, but that is the Manhattan effect, not a rule: three of the
+            four other NWSL relocations got <em>less</em> white as access improved.
           </p>
         </div>
 
-        <TransitionHeading>Does the model reward reach or just the novelty of a new stadium?</TransitionHeading>
+        {/* ================= H1 ================= */}
+        <HypothesisVerdict
+          id="H1"
+          question="Do teams that more people can reach draw more fans?"
+          claim="Across the whole league, teams that more people can reach draw more fans."
+          verdict="confirmed"
+          answer="Yes. Doubling the number of people who can reach a stadium is worth about 13% more fans, and the effect is statistically significant."
+        />
 
-        <div className="mb-14">
+        <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
+          Figure 2 &middot; The reach coefficient, with its confidence interval
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mb-4">
+          <div>
+            <p className="text-[15px] text-[var(--color-ink)]/85 leading-relaxed mb-3">
+              I regressed log(attendance) on log(reachable population) across 950 games, clustering the
+              standard errors by team so one club's many home games don't count as independent evidence.
+              The coefficient is <strong>+0.177</strong> (95% CI 0.009 to 0.345, p = 0.038).
+            </p>
+            <p className="text-[15px] text-[var(--color-ink)]/85 leading-relaxed">
+              Put simply, double a stadium's reach and you get roughly 13% more fans. Triple it, which
+              is what Gotham is doing, and you get about 21% more fans. That is promissing, but the confidence
+              interval is close to touching 0, so the size of this effect is not concrete.
+            </p>
+          </div>
+          <FigureCard
+            src={accessibilityCoefficient}
+            alt="Coefficient plot with 95% confidence interval for log(reachable population) predicting log(attendance), clustered standard errors by team. The point estimate is 0.177 and the interval runs from 0.009 to 0.345, staying above zero."
+            caption="The interval stays above zero, which is what confirms H1. It is also wide, which is why any of my estimates built off this model will be given as a range."
+          />
+        </div>
+
+        {/* ================= H2 ================= */}
+        <HypothesisVerdict
+          id="H2"
+          question="Is it the access, or just the novelty of a new stadium?"
+          claim="Reach stays the biggest factor even after controlling for opponent, schedule, weather, and team quality."
+          verdict="mixed"
+          answer="Access wins, but one could argue I rigged it. It is the largest single driver of the predicted jump, but it is also the one feature I gave its own model."
+        />
+
+        <p className="text-[15px] text-[var(--color-ink)]/85 leading-relaxed mb-6 max-w-3xl">
+          A tree model cannot predict beyond the range it trained on, and Etihad Park's catchment is 2.2
+          times larger than anything in the data. To compencate, this model is split into two parts.
+          A linear stage regresses log(attendance) on log(reach), and then catboost predicts on the residuals,
+          what the linear stage doesn't capture, based on 19 additional features.
+          Then I used SHAP to see what actually moves the prediction when I swap Sports Illustrated Stadium for
+          Etihad Park.
+        </p>
+
+        <div className="mb-8">
           <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
-            Figures 4–6 — CatBoost SHAP analysis
-          </p>
-          <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mb-4">
-            <code>team_venue_tenure</code> (seasons
-            since this team's relocation, null unless one occurred)
-            and <code>team_league_tenure</code> (seasons since the team's real NWSL expansion, null for original teams)
-            were added to the model to try and capture the "honeymoon effect", to try and parse out the novelty of a new stadium
-            from the actual accessibility increases. As of 2026-08-25, accessibility itself is no longer a CatBoost
-            feature at all — it's a separate linear stage (Figure 6) precisely because a tree model can't extrapolate
-            to Etihad Park's catchment population. The tenure features stay in CatBoost's residual stage below, and
-            SHAP still isolates their effect there.
+            Figures 3&ndash;4 &middot; What drives the predicted jump
           </p>
           <MechanismExplainer />
-          <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mt-5">
-            Read together: accessibility's contribution to the Queens prediction is no longer a
-            SHAP value competing with stadium-novelty effects for credit — it's a separate linear
-            term (+0.20 log-attendance, dominant in the shift) that can't be confounded with
-            <code> team_venue_tenure</code> resetting to 0, since that effect lives entirely in
-            CatBoost's residual stage and pulls the opposite direction (−0.08). That's cleaner
-            separation than sharing one model, but it comes with its own honesty requirement: the
-            linear coefficient's confidence interval is wide, which is why the Queens number is
-            reported as a range, not a point estimate.
+          <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mt-5 max-w-3xl">
+            Reach dominates partly because I handed it its own model.
+            That was the only way to let it extrapolate at all, but it means H2 cannot be answered with complete confidence.
           </p>
         </div>
 
-        {/* ============================================================ */}
-        <ResultsQuestionHeading
-          index="Q3"
-          question="Will attendance actually increase?"
-          sub="Accessibility tripled, and the mechanism check says that's real, not novelty. Does it show up in attendance — and can any of these models actually say by how much?"
-        />
+        <TransitionHeading>The model struggles to generalize on new venues.</TransitionHeading>
 
         <div className="mb-6">
           <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
-            Table 2 — where every model's own Queens prediction lands
+            Table 1 &middot; Random split vs. holding out a whole venue
           </p>
-          <QueensPredictionTable />
+          <ModelComparisonTable />
+          <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mt-3 max-w-3xl">
+            On a normal 80/20 train-test split, the model looks great (R&sup2; = 0.788)! But that's not the whole picture.
+            Hold out one venue and the R&sup2; collapses to <strong>0.004</strong>, which means the model is about as good as just guessing the league average.
+            This is an improvement on the linear stage (&minus;0.045), and earlier untuned versions (&minus;0.167), but this shows that no model can predict attendance for a stadium 
+            it's never seen, so we can't trust it to give us a single prediction for Etihad Park.
+          </p>
         </div>
 
-        <TransitionHeading>The best prediction.</TransitionHeading>
-        <p className="font-serif-heading text-lg font-semibold text-[var(--color-primary-deep)] mb-6">
-          Synthetic control: what staying at Sports Illustrated Stadium would have looked like instead.
+        <div className="mb-4">
+          <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
+            Figure 5 &middot; How wrong the model is, venue by venue
+          </p>
+          <FigureCard
+            src={lovoPerVenueMae}
+            alt="Horizontal bar chart of mean absolute error in fans for each of 17 team-venue pairs under Leave-One-Venue-Out cross-validation, sorted from lowest to highest error, with R-squared labeled per venue."
+            caption="Each bar is one venue, held out completely and predicted from the other 16. The error runs from under 1,200 fans at some venues to over 10,000 at others. Essentially, the model stuggles with teams with exceptional attendance."
+          />
+        </div>
+
+        {/* ================= H3 ================= */}
+        <HypothesisVerdict
+          id="H3"
+          question="Do bigger reach gains produce bigger attendance jumps?"
+          claim="When a team moves, the size of its attendance jump tracks the size of its reach gain."
+          verdict="unproven"
+          answer="This is true with all three relocations I looked at, but the sample size is too small to generalize."
+        />
+
+        <div className="mb-4">
+          <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
+            Table 2 &middot; Reach gain vs. attendance change, all five relocations
+          </p>
+          <RelocationTable />
+          <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mt-3 max-w-3xl">
+            Three teams is not a sample, it's annecdotal.
+            It is also impossible to separate the reach gain from the
+            honeymoon effect. Therefore, despite the trend, H3 is unproven.
+          </p>
+        </div>
+
+        {/* ================= Payoff: two methods, two answers ================= */}
+        <TransitionHeading>So what will Gotham actually draw in 2028?</TransitionHeading>
+
+        <p className="text-[var(--color-ink)]/85 leading-relaxed mb-10 max-w-3xl">
+          I have two ways to answer this and they disagree, so here is both, in the order I trust them
+          least to most. To keep them comparable I am asking each one the same question: how many extra
+          fans is the move itself worth? Gotham averaged <strong>10,900</strong> in 2026.
         </p>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-8 items-start mb-14">
-          <div className="space-y-6">
-            <ScenarioBars />
-            <StadiumFillViz />
+        {/* ---- Answer 1: the model ---- */}
+        <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">Answer 1 of 2</p>
+        <div className="border border-[var(--color-line)] bg-[var(--color-paper)] shadow-offset-sm mb-4">
+          <div className="px-5 py-3 border-b border-[var(--color-line)] bg-[var(--color-paper-alt)] flex flex-wrap items-center gap-3">
+            <span className="font-serif-heading text-lg font-semibold text-[var(--color-primary-deep)]">
+              The predictive model says
+            </span>
+            <span
+              className="font-mono-label text-[11px] font-semibold px-2.5 py-1 border whitespace-nowrap"
+              style={{
+                color: 'var(--color-no)',
+                backgroundColor: 'var(--color-no-soft)',
+                borderColor: 'var(--color-no)',
+              }}
+            >
+              Almost certainly too low
+            </span>
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 md:gap-8 px-5 py-5 items-center">
+            <div>
+              <p className="font-serif-heading text-4xl font-semibold text-[var(--color-primary-deep)] whitespace-nowrap">
+                +1,500 to +3,500
+              </p>
+              <p className="font-mono-label text-[11px] text-[var(--color-primary)] mt-1">
+                extra fans from the move
+              </p>
+              <p className="text-xs text-[var(--color-ink)]/60 mt-2 leading-relaxed max-w-[15rem]">
+                A full Etihad Park schedule scores 12,368, or 14,422 once I correct for the bump teams
+                usually get in their first season somewhere new.
+              </p>
+            </div>
+            <div className="border-l-0 md:border-l border-[var(--color-line)] md:pl-8">
+              <p className="text-[15px] text-[var(--color-ink)]/85 leading-snug mb-3">
+                That is a move worth barely more than a rounding error, and I do not believe it. The
+                reason is the failure I showed above: this model scored{' '}
+                <strong>0.004</strong> on a venue it had never seen. Etihad Park is the most unfamiliar
+                venue it could possibly be handed.
+              </p>
+              <p className="text-[15px] text-[var(--color-ink)]/85 leading-snug">
+                Tree models cannot reach past the range they trained on, so when a stadium is bigger and
+                better connected than anything in the data, they quietly pull the answer back toward the
+                league average. Read this number as a floor, not a forecast.
+              </p>
+            </div>
+          </div>
+          <p className="px-5 py-2 text-xs text-[var(--color-primary)]/70 border-t border-[var(--color-line)]">
+            Two earlier versions failed worse and are retired. CatBoost on its own returned the identical
+            answer whether I fed it Etihad Park's real catchment or the training maximum, and a plain
+            regression on raw population predicted four times the stadium's capacity. Splitting reach into
+            its own log-scale stage was the fix for both.
+          </p>
+        </div>
 
-          <div>
-            <p className="font-serif-heading text-xl font-semibold text-[var(--color-primary-deep)] leading-snug mb-3">
-              Find teams whose past looks like Gotham's, then watch what happened after they moved.
-            </p>
-            <ul className="space-y-2.5">
-              <li className="flex gap-2.5 text-[15px] text-[var(--color-ink)]/90 leading-snug">
-                <span className="shrink-0 text-[var(--color-accent)] font-semibold" aria-hidden>
-                  →
-                </span>
-                <span>
-                  Post-move Gotham is, in feature terms, a team the models above have never seen —
-                  exactly the case they can't predict. Synthetic control sidesteps the problem
-                  instead of solving it head-on.
-                </span>
-              </li>
-              <li className="flex gap-2.5 text-[15px] text-[var(--color-ink)]/90 leading-snug">
-                <span className="shrink-0 text-[var(--color-accent)] font-semibold" aria-hidden>
-                  →
-                </span>
-                <span>
-                  It builds a weighted blend of other real teams (North Carolina Courage, Orlando
-                  Pride, and Washington Spirit carry most of the weight) whose combined attendance
-                  history tracks Gotham's own trajectory closely through 2026 — a stand-in for
-                  "Gotham if it had never moved."
-                </span>
-              </li>
-              <li className="flex gap-2.5 text-[15px] text-[var(--color-ink)]/90 leading-snug">
-                <span className="shrink-0 text-[var(--color-accent)] font-semibold" aria-hidden>
-                  →
-                </span>
-                <span>
-                  Once Gotham actually moves, its real attendance and that synthetic stand-in
-                  diverge. The size of that gap is this project's central estimate — not a model
-                  guessing a new number, but comparable teams' own history read back.
-                </span>
-              </li>
-              <li className="flex gap-2.5 text-[15px] text-[var(--color-ink)]/90 leading-snug">
-                <span className="shrink-0 text-[var(--color-accent)] font-semibold" aria-hidden>
-                  →
-                </span>
-                <span>
-                  The two post-move bars aren't a confidence interval — they're bounded by what
-                  actually happened at three comparable relocations: San Diego's +68.8% lift as
-                  the floor, the Seattle/Washington Spirit scale of lift (both round to capacity)
-                  as the ceiling. Kansas City Current is left out; it was already selling out its
-                  smaller stadium, so its raw change understates real demand.
-                </span>
-              </li>
-            </ul>
+        {/* ---- Answer 2: synthetic control ---- */}
+        <p className="font-mono-label text-xs text-[var(--color-primary)] mt-12 mb-3">Answer 2 of 2</p>
+        <div className="border border-[var(--color-line)] bg-[var(--color-paper)] shadow-offset-sm mb-8">
+          <div className="px-5 py-3 border-b border-[var(--color-line)] bg-[var(--color-paper-alt)] flex flex-wrap items-center gap-3">
+            <span className="font-serif-heading text-lg font-semibold text-[var(--color-primary-deep)]">
+              Comparable teams say
+            </span>
+            <span
+              className="font-mono-label text-[11px] font-semibold px-2.5 py-1 border whitespace-nowrap"
+              style={{
+                color: 'var(--color-yes)',
+                backgroundColor: 'var(--color-yes-soft)',
+                borderColor: 'var(--color-yes)',
+              }}
+            >
+              My best estimate
+            </span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 md:gap-8 px-5 py-5 items-center">
+            <div>
+              <p className="font-serif-heading text-4xl font-semibold text-[var(--color-primary-deep)] whitespace-nowrap">
+                +4,845 to +11,884
+              </p>
+              <p className="font-mono-label text-[11px] text-[var(--color-primary)] mt-1">
+                extra fans from the move
+              </p>
+              <p className="text-xs text-[var(--color-ink)]/60 mt-2 leading-relaxed max-w-[15rem]">
+                Three to eight times what the model predicted, on top of the growth Gotham gets either way.
+              </p>
+            </div>
+            <div className="border-l-0 md:border-l border-[var(--color-line)] md:pl-8">
+              <p className="text-[15px] text-[var(--color-ink)]/85 leading-snug mb-3">
+                So I stopped asking a model to imagine a stadium and asked what actually happened to teams
+                that moved. Synthetic control builds a fake no-move Gotham out of eight teams that stayed
+                put, weighted so their combined history tracks Gotham's own through 2026. North Carolina
+                Courage (0.417), Orlando Pride (0.310), and Washington Spirit (0.273) carry nearly all of
+                it.
+              </p>
+              <p className="text-[15px] text-[var(--color-ink)]/85 leading-snug">
+                Nothing here has to extrapolate. The lift comes from San Diego, Seattle, and Washington
+                Spirit's own relocations, which is why I trust it more than the model above.
+              </p>
+            </div>
           </div>
         </div>
+
+        <div className="mb-10">
+          <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
+            Figure 6 &middot; Checking that method on moves that already happened
+          </p>
+          <PlaceboValidation />
+        </div>
+
+        <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
+          Figure 7 &middot; What each scenario looks like in the building
+        </p>
+        <StadiumFillViz />
+
       </div>
     </section>
   )

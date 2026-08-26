@@ -1,23 +1,33 @@
 import SectionHeading from '../components/SectionHeading'
 
-const TAKEAWAYS = [
+// Mirrors the three verdicts in Results, then the one thing none of them can settle.
+const SCORECARD = [
   {
-    eyebrow: 'The honest check',
-    headline: 'No model here can predict a team it hasn’t seen.',
+    id: 'H1',
+    claim: 'Reach drives attendance league-wide',
+    verdict: 'Confirmed',
+    color: 'var(--color-yes)',
+    bg: 'var(--color-yes-soft)',
     detail:
-      'Linear and gradient-boosted alike collapse once team identity can’t leak across folds — that’s the real finding, not a footnote. The synthetic-control range is a small-sample descriptive estimate (3 comparable relocations, one excluded for capacity-suppression), not a precise forecast, and it’s reported as a range for that reason.',
+      'Double a stadium’s reach and you get about 13% more fans (coefficient +0.177, p = 0.038). The interval is wide, so I trust the direction more than the exact size.',
   },
   {
-    eyebrow: 'Cut for course scope, not failure',
-    headline: 'Panel regression + DiD agreed on direction, never on significance.',
+    id: 'H2',
+    claim: 'Access beats novelty',
+    verdict: 'Confirmed, with a catch',
+    color: 'var(--color-maybe)',
+    bg: 'var(--color-maybe-soft)',
     detail:
-      'A team+season fixed-effects model (399 NWSL+MLS team-seasons, clustered SEs) and a DiD cross-check both worked — positive, consistent direction, never significant, because there have only ever been ~4–5 real NWSL relocation events to learn an effect from. Not taught in QSS 45, so cut from the graded pipeline; recoverable from git history.',
+      'Reach is the largest single driver of the predicted jump at +0.197, ahead of everything else combined. But it is also the one feature I gave its own model, so this is not a clean independent test.',
   },
   {
-    eyebrow: 'Next steps',
-    headline: 'More relocations — or panel econometrics back in scope — would tighten this to a confidence interval.',
+    id: 'H3',
+    claim: 'Bigger reach gain, bigger jump',
+    verdict: 'Not proven',
+    color: 'var(--color-no)',
+    bg: 'var(--color-no-soft)',
     detail:
-      'Also worth checking whether the ~8% of the panel that’s capacity-censored (teams reporting a fixed "sold out" figure) is undercounting the true lift at venues, like Etihad Park, likely to sell out themselves.',
+      'All three usable relocations line up in the right order, which is exactly what I predicted and still only three points. Every one of those teams got a nicer stadium at the same time, so novelty and access cannot be separated.',
   },
 ]
 
@@ -25,45 +35,81 @@ export default function TakeawaySection() {
   return (
     <section id="takeaway" className="border-t border-[var(--color-line)] py-16">
       <div className="max-w-5xl mx-auto px-6">
-        <SectionHeading index="05" title="Does better access mean more attendance?" eyebrow="So what" />
+        <SectionHeading index="05" title="So does better access mean more fans?" eyebrow="So what" />
 
-        {/* The claim, kept to one sentence someone can read in three seconds, with
-            the two headline numbers repeated as anchors rather than re-argued. */}
         <div className="border border-[var(--color-primary-deep)] bg-[var(--color-primary-deep)] text-white p-8 shadow-offset">
-          <p className="font-mono-label text-[11px] text-[var(--color-accent)] mb-3">The claim</p>
+          <p className="font-mono-label text-[11px] text-[var(--color-accent)] mb-3">The short answer</p>
           <p className="font-serif-heading text-3xl md:text-4xl font-semibold leading-snug max-w-3xl">
-            Reach tripled. Synthetic control puts 2027 attendance at 22,137–25,000 — up from a
-            13,116-seat no-move baseline — but no predictive model here can prove that lift for a
-            team it hasn’t seen.
+            Almost certainly yes, but I cannot concretely pin down the magnitude of this effect. Gotham should
+            draw between 17,961 and a sellout in 2028, against 13,116 if they had stayed in Harrison.
           </p>
           <div className="flex flex-wrap gap-x-8 gap-y-3 mt-6 pt-6 border-t border-white/15">
             <div>
-              <p className="font-mono text-2xl font-semibold text-white">3.0×</p>
-              <p className="font-mono-label text-[10px] text-white/60 mt-0.5">reach vs. Sports Illustrated Stadium — measured</p>
+              <p className="font-mono text-2xl font-semibold text-white">3.0&times;</p>
+              <p className="font-mono-label text-[10px] text-white/60 mt-0.5">more people within an hour</p>
             </div>
             <div>
-              <p className="font-mono text-2xl font-semibold text-[var(--color-accent)]">13,116 → 22,137–25,000</p>
-              <p className="font-mono-label text-[10px] text-white/60 mt-0.5">2027 attendance, no-move vs. move — synthetic control</p>
+              <p className="font-mono text-2xl font-semibold text-[var(--color-accent)]">
+                13,116 &rarr; 17,961&ndash;25,000
+              </p>
+              <p className="font-mono-label text-[10px] text-white/60 mt-0.5">2028 attendance, stay vs. move</p>
             </div>
             <div>
-              <p className="font-mono text-2xl font-semibold text-white">89–100%</p>
-              <p className="font-mono-label text-[10px] text-white/60 mt-0.5">2027 capacity-fill — estimated range</p>
+              <p className="font-mono text-2xl font-semibold text-white">72&ndash;100%</p>
+              <p className="font-mono-label text-[10px] text-white/60 mt-0.5">of Etihad Park filled</p>
             </div>
           </div>
         </div>
 
-        {/* Scannable takeaway cards: one bold, large-type sentence each, with the
-            fuller argument underneath in smaller, muted type for anyone who wants it. */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 max-w-6xl">
-          {TAKEAWAYS.map((t) => (
-            <div key={t.eyebrow} className="border-t-2 border-[var(--color-accent)] pt-4">
-              <p className="font-mono-label text-[10px] text-[var(--color-primary)] mb-2">{t.eyebrow}</p>
-              <p className="font-serif-heading text-xl font-semibold leading-snug text-[var(--color-primary-deep)] mb-3">
-                {t.headline}
+        <p className="font-mono-label text-xs text-[var(--color-primary)] mt-12 mb-4">
+          The scorecard
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {SCORECARD.map((t) => (
+            <div key={t.id} className="border border-[var(--color-line)] bg-[var(--color-paper)] p-5 shadow-offset-sm">
+              <div className="flex items-center gap-2.5 mb-3">
+                <span className="font-mono text-sm font-semibold text-white bg-[var(--color-primary-deep)] px-2.5 py-1">
+                  {t.id}
+                </span>
+                <span
+                  className="font-mono-label text-[10px] font-semibold px-2 py-1 border"
+                  style={{ color: t.color, backgroundColor: t.bg, borderColor: t.color }}
+                >
+                  {t.verdict}
+                </span>
+              </div>
+              <p className="font-serif-heading text-lg font-semibold leading-snug text-[var(--color-primary-deep)] mb-2">
+                {t.claim}
               </p>
               <p className="text-sm text-[var(--color-ink)]/65 leading-relaxed">{t.detail}</p>
             </div>
           ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 border-t border-[var(--color-line)] pt-8">
+          <div>
+            <p className="font-serif-heading text-xl font-semibold text-[var(--color-primary-deep)] mb-3">
+              What this study can't prove
+            </p>
+            <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed">
+              I am confident that moving raises attendance? Why this happens is something I'm less sure about.
+              All of my results suggest that transit access plays a role, but I can't isolate it from
+              all of the factors that play into a stadium move (novelty, better facilities, marketing, etc.)
+            </p>
+          </div>
+          <div>
+            <p className="font-serif-heading text-xl font-semibold text-[var(--color-primary-deep)] mb-3">
+              What would fix it
+            </p>
+            <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed">
+              More relocations, which means more time. With more data, I want to separate a new
+              stadium&rsquo;s honeymoon effect from access, and test whether one-off games in big
+              venues, like Gotham&rsquo;s 42,175-fan night at Citi Field, can predict what a team draws
+              after it moves. Nobody knows the ceiling on women&rsquo;s sports growth right now, which is
+              why I started this in the first place. Needless to say I'm excited to see how Gotham's attendance
+              pans out and to enjoy the new stadium!
+            </p>
+          </div>
         </div>
       </div>
     </section>

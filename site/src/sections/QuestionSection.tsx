@@ -1,56 +1,80 @@
 import SectionHeading from '../components/SectionHeading'
-import Tag from '../components/Tag'
+
+// The three predictions I test. Results (04) answers them one at a time, in this order.
+const HYPOTHESES = [
+  {
+    id: 'H1',
+    short: 'Reach drives attendance',
+    text: 'Across the whole league, teams that more people can reach draw more fans.',
+  },
+  {
+    id: 'H2',
+    short: 'Access, not novelty',
+    text: 'Reach stays the biggest factor even after I control for the opponent, the schedule, the weather, and how good the team is.',
+  },
+  {
+    id: 'H3',
+    short: 'Bigger gain, bigger lift',
+    text: 'When a team moves, the size of its attendance jump tracks the size of its reach gain.',
+  },
+]
 
 export default function QuestionSection() {
   return (
     <section id="question" className="border-t border-[var(--color-line)] py-16">
       <div className="max-w-5xl mx-auto px-6">
         <SectionHeading index="01" title="The Question" eyebrow="Motivation" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           <div className="md:col-span-2 space-y-4 text-[var(--color-ink)]/85 leading-relaxed">
             <p>
-              Gotham FC currently plays at Sports Illustrated Stadium in Harrison, NJ and has the 2nd lowest
-              attendance in the NWSL. In 2027, the team will relocate to Etihad Park,
-              a new stadium they'll share with NYCFC at Willets Point, Queens.
-              The stadium will be directly accesible by the 7 train, 
-              in contrast to the PATH ride to Sports Illustrated Stadium.
-              How much does this move actually change who can get to a game, and does that accessibility gain move
-              attendance?
+              Gotham FC is currently 1st in the league (as of August, 2026), but you wouldn't know it from looking at the stands.
+              In 2028 they move to Etihad Park in Willets Point, Queens from Harrison, New Jersey, off the 7 train instead of a PATH ride out of Manhattan. 
+              That number of people who can reach a home game in an hour will go from 1.05 million to 3.20 million, more than 2x the reach of any current NWSL stadium.
             </p>
             <p>
-              We try to predict this attendance lift two ways. First, a two-stage predictive model: a
-              linear regression of log(attendance) on log(reachable population) alone — log-transformed
-              specifically so it can extrapolate to Etihad Park's much larger catchment without
-              running away — plus a CatBoost model trained on everything that linear stage leaves
-              unexplained (opponent, schedule, venue capacity, and more), computed from real GTFS +
-              OSM isochrones (see <a href="https://nwsl-growth-analysis-e4td.vercel.app/"><strong>nwsl-project</strong></a> for
-              the prior work this builds on). We honestly check whether that model generalizes to a
-              venue it hasn't seen (it mostly doesn't — see Results). Second, a synthetic control
-              analysis of four other NWSL teams' own stadium relocations, estimating what Gotham's
-              attendance would have looked like if they had stayed at Sports Illustrated Stadium vs. moving to
-              Etihad Park.
+              Gotham's July 2026 game at Citi Field,
+              across the street from the new site, drew <strong>42,175</strong> fans. Their normal home
+              average is about <strong>8,110</strong>.
+            </p>
+            <p>
+              That beings me to my question: does making a stadium easier to get to actually put more people in it? I test that three
+              ways.
             </p>
           </div>
-          <div className="border border-[var(--color-line)] bg-[var(--color-paper-alt)] p-5 shadow-offset-accent">
-            <p className="font-mono-label text-[11px] text-[var(--color-primary)] mb-3">
-              Comparative frame
+
+          <div className="border border-[var(--color-line)] bg-[var(--color-paper-alt)] p-5 shadow-offset-accent self-start">
+            <p className="font-mono-label text-[11px] text-[var(--color-primary)] mb-3">Why this question is difficult to answer with confidence</p>
+            <p className="text-sm text-[var(--color-ink)]/80 leading-relaxed">
+              Only four NWSL teams have moved recently, and a new stadium changes many factors beyond accessibility.
+              On top of that the whole league is growing fast, from
+              5,711 average attendance in 2016 to 10,243 in 2025. Any honest estimate has to separate
+              Gotham's move from all of these competing factors.
             </p>
-            <p className="text-sm text-[var(--color-ink)]/80 leading-relaxed mb-4">
-              Four other current NWSL teams relocated recently (KC, San Diego, Seattle,
-              Washington). This is too small a sample for a robust model, but rather a precedent for what 
-              stadium moves do to a team's own attendance, 
-              and a donor pool for a synthetic-control estimate of what staying at
-              Sports Illustrated Stadium would look like in comparison to the move to Queens.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <Tag>KC Current</Tag>
-              <Tag>San Diego Wave</Tag>
-              <Tag>Seattle Reign</Tag>
-              <Tag>Washington Spirit</Tag>
-            </div>
-            <p className="font-mono-label text-[10px] text-[var(--color-primary)]/60 mt-3">
-              → this donor pool becomes the scenario range in Results (04)
-            </p>
+          </div>
+        </div>
+
+        <div>
+          <p className="font-mono-label text-xs text-[var(--color-primary)] mb-4">
+            Three predictions, answered one at a time in Results
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {HYPOTHESES.map((h) => (
+              <div
+                key={h.id}
+                className="border border-[var(--color-line)] bg-[var(--color-paper)] p-5 shadow-offset-sm"
+              >
+                <div className="flex items-center gap-2.5 mb-3">
+                  <span className="font-mono text-sm font-semibold text-white bg-[var(--color-primary-deep)] px-2.5 py-1">
+                    {h.id}
+                  </span>
+                  <span className="font-serif-heading text-base font-semibold text-[var(--color-primary-deep)]">
+                    {h.short}
+                  </span>
+                </div>
+                <p className="text-sm text-[var(--color-ink)]/75 leading-relaxed">{h.text}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

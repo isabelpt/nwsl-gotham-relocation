@@ -1,6 +1,6 @@
 // Decorative motif for the hero: expanding isochrone rings radiating out from a stadium point,
 // echoing the 30/45/60/90-min bands on the interactive map in the Results section. Replaces the
-// earlier soccer-pitch motif — this project's headline finding is a reach comparison, so the
+// earlier soccer-pitch motif. This project's headline finding is a reach comparison, so the
 // background should look like one.
 //
 // Rendered largest-first (outermost band on the bottom of the stack, innermost/darkest on top)

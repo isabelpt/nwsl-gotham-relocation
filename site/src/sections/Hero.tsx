@@ -23,10 +23,10 @@ export default function Hero() {
               By Isabel Prado-Tucker
             </p>
             <p className="mt-5 text-base text-[var(--color-ink)]/80 leading-relaxed max-w-md">
-              Gotham FC is moving from Sports Illustrated Stadium in Harrison, NJ to Etihad Park in Queens, NY in 2027. 
-              The new stadium has a 60-minute reach of 3.2 million people. 
-              Check out how it'll impact attendance.
-            </p>
+              Gotham FC moves from New Jersey to Queens in 2028, and the number of people who
+              can reach a home game in an hour triple. They currently draw
+              some of the worst crowds in the league, despite representing the biggest market and consistently performing well on the pitch. 
+              I found out if this increase in reach will fill more seats.</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a
                 href="#results"
@@ -48,7 +48,7 @@ export default function Hero() {
               <StatTile value="3.20M" label="Reachable within 60 min, Etihad Park" />
               <StatTile value="3.0×" label="vs. Sports Illustrated Stadium's 1.05M" />
               <StatTile value="71%" label="of Manhattan reachable in 60 min" />
-              <StatTile value="89–100%" label="projected 2027 capacity-fill" variant="estimate" />
+              <StatTile value="72–100%" label="projected 2028 capacity-fill" variant="estimate" />
             </div>
             <div className="border border-[var(--color-line)] bg-[var(--color-paper-alt)] p-5 shadow-offset-accent">
               <p className="font-mono-label text-[11px] text-[var(--color-primary)] mb-3">

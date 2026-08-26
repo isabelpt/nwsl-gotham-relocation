@@ -1,62 +1,44 @@
 import { useState } from 'react'
 import shapRbaEtihad from '../assets/figures/shap-rba-etihad.png'
 import shapMechanism from '../assets/figures/shap-mechanism.png'
-import accessibilityCoefficient from '../assets/figures/accessibility-coefficient.png'
 
 const PANELS = [
   {
     key: 'magnitude',
-    tag: 'Figure 4',
-    label: 'Driver Magnitude',
-    stat: "venue_name ranks #1",
+    tag: 'Figure 3',
+    label: 'What CatBoost is left explaining',
+    stat: 'venue_name, 27%',
     img: shapRbaEtihad,
-    alt: 'Bar chart: mean absolute SHAP value per feature (residual stage), Sports Illustrated Stadium rows vs. Etihad Park rows. venue_name is the largest-magnitude feature, followed by table_rank and year.',
-    title: "Accessibility no longer shows up here at all — and that's on purpose",
+    alt: 'Bar chart of mean absolute SHAP value per feature in the residual stage, comparing Sports Illustrated Stadium rows against Etihad Park rows. venue_name is the largest at roughly 27% of total importance, followed by year and home_team at about 10% each.',
+    title: 'Reach is deliberately absent from this chart',
     bullets: [
-      "metro_size was pulled out of CatBoost entirely on 2026-08-25: it's not a tree feature anymore, so it can't appear in this chart. Accessibility's effect now lives in a separate linear stage — see the third panel.",
-      'What CatBoost explains now is the residual left over after accessibility is accounted for: venue_name, table_rank, and year are the largest remaining drivers, in that order.',
+      'I pulled reach out of CatBoost entirely, so it cannot show up here. What is left is everything that remains after reach is accounted for.',
+      'The leftovers are venue identity (about 27%), then year and home team (about 10% each). That is scheduling and branding texture, not access.',
     ],
   },
   {
     key: 'shift',
-    tag: 'Figure 5',
-    label: 'Mechanism Shift',
-    stat: 'linear stage: +0.20',
+    tag: 'Figure 4',
+    label: 'What moves the Queens prediction',
+    stat: 'reach, +0.197',
     img: shapMechanism,
-    alt: 'Diverging bar chart: shift in prediction, Etihad Park vs Sports Illustrated Stadium, split into the linear stage\'s accessibility contribution (gold) and CatBoost residual SHAP for every other feature (green/red)',
-    title: "Accessibility is the single largest driver of the predicted increase — as a linear term, not a SHAP value",
+    alt: 'Diverging bar chart showing the shift in predicted log attendance from Sports Illustrated Stadium to Etihad Park. The linear reach term contributes +0.197, venue recognition +0.116, home team recognition +0.035, and every other feature is close to zero.',
+    title: 'Reach is the single largest driver of the jump',
     bullets: [
-      "Swap Sports Illustrated Stadium for Etihad Park: the linear stage's accessibility contribution (+0.20 log-attendance) is the largest single driver of the shift — computed directly from 04's coefficient, not TreeSHAP, since metro_size isn't a CatBoost input anymore.",
-      "team_venue_tenure resetting to 0 (Gotham's first season at a new venue) pulls the residual down (−0.08) — consistent with this project's own leave-one-venue-out check finding debut seasons get under-predicted on average. venue_name itself is the largest residual mover (+0.20), but Etihad Park is an unseen category for CatBoost here — a smaller, different caveat from the metro_size fix, worth reading with real caution rather than as a confirmed effect.",
-    ],
-  },
-  {
-    key: 'coefficient',
-    tag: 'Figure 6',
-    label: 'Accessibility Coefficient',
-    stat: 'coef = +0.177, p = 0.038',
-    img: accessibilityCoefficient,
-    alt: 'Coefficient plot with 95% confidence interval: log(metro_size) predicting log(attendance), clustered standard errors by team, coefficient +0.177, 95% CI [0.009, 0.345]',
-    title: 'Why accessibility lives in its own linear model now',
-    bullets: [
-      "CatBoost (any tree model) can't extrapolate past the range of values it trained on — Etihad Park's real catchment population is 2.2× the largest value ever seen in training, and an earlier version of this pipeline found CatBoost gave the identical prediction whether fed that real value or the training max, capped. Silent, not an error.",
-      "The fix: a separate linear stage on log(metro_size) — log-transformed specifically so the extrapolation to Etihad Park is only ~0.78 log-units past the training max instead of 2.2× in raw units. The coefficient (+0.177, 95% CI [0.009, 0.345], p=0.038) is only marginally significant, and that uncertainty is real — it's why the Queens prediction is reported as a range, not a single number.",
+      'Swapping the old stadium for Etihad Park across 54 matched games, reach contributes +0.197 in log attendance. Venue recognition adds +0.116 and home team +0.035.',
+      'Every one of the other 19 features rounds to roughly nothing. Almost all of the predicted lift traces back to how many people can get there.',
+      'One caveat I will not bury: Etihad Park is a label CatBoost has never seen, so its +0.116 is the model reacting to an unfamiliar name, not a measured venue effect.',
     ],
   },
 ] as const
 
 export default function MechanismExplainer() {
-  const [active, setActive] = useState<(typeof PANELS)[number]['key']>('magnitude')
+  const [active, setActive] = useState<(typeof PANELS)[number]['key']>('shift')
   const panel = PANELS.find((p) => p.key === active)!
 
   return (
     <div>
-      <p className="font-mono-label text-[11px] text-[var(--color-primary)] flex items-center gap-2 mb-4">
-        <span aria-hidden className="inline-flex h-2 w-2 rounded-full bg-[var(--color-accent)] animate-pulse" />
-        Click a panel to see its evidence
-      </p>
-
-      <div role="tablist" aria-label="SHAP mechanism panels" className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-6">
+      <div role="tablist" aria-label="SHAP mechanism panels" className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6">
         {PANELS.map((p) => (
           <button
             key={p.key}
@@ -70,11 +52,23 @@ export default function MechanismExplainer() {
                 : 'text-left border-2 px-4 py-3 transition-all duration-150 cursor-pointer border-[var(--color-line)] bg-[var(--color-paper-alt)] text-[var(--color-ink)] hover:border-[var(--color-accent)] hover:-translate-y-0.5 hover:shadow-offset-sm'
             }
           >
-            <p className={active === p.key ? 'font-mono-label text-[10px] text-white/70 mb-1' : 'font-mono-label text-[10px] text-[var(--color-primary)]/60 mb-1'}>
+            <p
+              className={
+                active === p.key
+                  ? 'font-mono-label text-[10px] text-white/70 mb-1'
+                  : 'font-mono-label text-[10px] text-[var(--color-primary)]/60 mb-1'
+              }
+            >
               {p.tag}
             </p>
             <p className="font-mono-label text-[11px] font-semibold mb-1.5 leading-snug">{p.label}</p>
-            <p className={active === p.key ? 'font-mono text-[11px] text-white/85' : 'font-mono text-[11px] text-[var(--color-ink)]/70'}>
+            <p
+              className={
+                active === p.key
+                  ? 'font-mono text-[11px] text-white/85'
+                  : 'font-mono text-[11px] text-[var(--color-ink)]/70'
+              }
+            >
               {p.stat}
             </p>
           </button>
@@ -95,7 +89,7 @@ export default function MechanismExplainer() {
             {panel.bullets.map((b) => (
               <li key={b} className="flex gap-2.5 text-[15px] text-[var(--color-ink)]/90 leading-snug">
                 <span className="shrink-0 text-[var(--color-accent)] font-semibold" aria-hidden>
-                  →
+                  &rarr;
                 </span>
                 <span>{b}</span>
               </li>
