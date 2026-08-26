@@ -15,7 +15,7 @@ Reads:
         headline clustering, not either single-threshold robustness check)
     ../data/raw/census/nyc_nta_2020.geojson  -- NYC's Neighborhood Tabulation Areas (free NYC
         Open Data, no key: https://data.cityofnewyork.us/resource/9nt8-h7nd.geojson). NYC-only
-        geography -- NJ tracts (Harrison/Newark, around Red Bull Arena) get no neighborhood
+        geography -- NJ tracts (Harrison/Newark, around Sports Illustrated Stadium) get no neighborhood
         name, since no equivalent standard source exists for NJ at this scope.
 Writes:
     public/data/tracts.geojson   -- one polygon per tract, RBA/Etihad travel times + population
@@ -65,7 +65,7 @@ def main():
     tracts["GEOID"] = tracts["GEOID"].astype(str)
     print(f"{len(tracts)} tracts within the metro bbox")
 
-    print("Joining travel times (Red Bull Arena, Etihad Park)...")
+    print("Joining travel times (Sports Illustrated Stadium, Etihad Park)...")
     tt = pd.read_csv(os.path.join(DATA_PROCESSED, "nyc_tract_travel_times_90min.csv"), dtype={"GEOID": str})
     tt = tt[tt["site_label"].isin(["current", "future"])]
     rba = tt[tt["site_label"] == "current"][["GEOID", "travel_time_minutes"]].rename(
@@ -121,7 +121,7 @@ def main():
 
     print("Computing reachable-population stats...")
     THRESHOLDS = [30, 45, 60, 90]
-    stats = {"current": {"name": "Red Bull Arena"}, "future": {"name": "Etihad Park"}}
+    stats = {"current": {"name": "Sports Illustrated Stadium"}, "future": {"name": "Etihad Park"}}
     for label, col in [("current", "rba_minutes"), ("future", "etihad_minutes")]:
         by_thresh = {}
         for t in THRESHOLDS:

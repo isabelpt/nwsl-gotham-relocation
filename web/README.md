@@ -1,7 +1,6 @@
 # Interactive isochrone map
 
-Standalone React + MapLibre GL page with two views: **Accessibility comparison** (Red Bull
-Arena vs. Etihad Park transit+walk reach, NYC only, per the deliverable's core finding) and
+Standalone React + MapLibre GL page with two views: **Accessibility comparison** (Sports Illustrated Stadium vs. Etihad Park transit+walk reach, NYC only, per the deliverable's core finding) and
 **Demographic clusters** (the k-means clusters from `code/supplementary/08_tract_clustering.ipynb`, colored to
 match that notebook's static map, each with a gain/loss indicator showing the cluster's average
 change in transit time to the stadium). An address search box (geocoded via Nominatim, free, no

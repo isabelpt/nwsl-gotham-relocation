@@ -12,7 +12,7 @@ export type ScenarioRow = {
 }
 
 export const scenarios: ScenarioRow[] = [
-  { label: 'No move (stay at Red Bull Arena)', attendance: 13116, pctOfCapacity: 52.5, note: 'synthetic control baseline', kind: 'baseline' },
+  { label: 'No move (stay at Sports Illustrated Stadium)', attendance: 13116, pctOfCapacity: 52.5, note: 'synthetic control baseline', kind: 'baseline' },
   { label: 'Etihad Park — low scenario', attendance: 22137, pctOfCapacity: 88.5, note: "San Diego's post-move lift (+68.8%)", kind: 'range' },
   { label: 'Etihad Park — capacity-cap scenario', attendance: 25000, pctOfCapacity: 100, note: 'Seattle/Washington-scale lift (+103–174%), capped at capacity', kind: 'range' },
 ]

@@ -1,2 +1,2 @@
-venue_name,stadium_capacity,metro_size,dedicated_soccer_facility,shared_with_other_league
-Etihad Park,25000,3201230,1,1
+venue_name,stadium_capacity,metro_size,dedicated_soccer_facility,shared_with_other_league,ppg,points_back_from_playoff_line,temp_max_c,precipitation_mm,stop_count_catchment,pct_commute_transit,prior_sellout_rate
+Etihad Park,25000,3201230,1,1,2.0,-10,24.2,0.1,,45.554923996280095,0.0

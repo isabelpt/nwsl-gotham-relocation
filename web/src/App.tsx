@@ -69,7 +69,7 @@ export default function App() {
           Gotham FC's Move to Queens
         </h1>
         <p style={{ fontSize: "0.85rem", color: "#555", marginTop: 0 }}>
-          Transit + walk accessibility, Red Bull Arena vs. Etihad Park (opening 2027)
+          Transit + walk accessibility, Sports Illustrated Stadium vs. Etihad Park (opening 2027)
         </p>
 
         <form onSubmit={handleSearch} style={{ marginTop: "1rem", display: "flex", gap: "0.4rem" }}>
@@ -142,7 +142,7 @@ export default function App() {
                 )
               ) : (
                 <>
-                  <div>Red Bull Arena: {hoverRba != null ? `${Math.round(Number(hoverRba))} min` : "90+ min"}</div>
+                  <div>Sports Illustrated Stadium: {hoverRba != null ? `${Math.round(Number(hoverRba))} min` : "90+ min"}</div>
                   <div>Etihad Park: {hoverEtihad != null ? `${Math.round(Number(hoverEtihad))} min` : "90+ min"}</div>
                 </>
               )}
@@ -283,7 +283,7 @@ export default function App() {
                 <span
                   style={{ width: 10, height: 10, borderRadius: "50%", background: SITE_CONFIG.current.color }}
                 />
-                Red Bull Arena is faster
+                Sports Illustrated Stadium is faster
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
                 <span

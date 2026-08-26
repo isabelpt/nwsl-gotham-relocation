@@ -10,7 +10,7 @@ const PANELS = [
     label: 'Driver Magnitude',
     stat: "venue_name ranks #1",
     img: shapRbaEtihad,
-    alt: 'Bar chart: mean absolute SHAP value per feature (residual stage), Red Bull Arena rows vs. Etihad Park rows. venue_name is the largest-magnitude feature, followed by table_rank and year.',
+    alt: 'Bar chart: mean absolute SHAP value per feature (residual stage), Sports Illustrated Stadium rows vs. Etihad Park rows. venue_name is the largest-magnitude feature, followed by table_rank and year.',
     title: "Accessibility no longer shows up here at all — and that's on purpose",
     bullets: [
       "metro_size was pulled out of CatBoost entirely on 2026-08-25: it's not a tree feature anymore, so it can't appear in this chart. Accessibility's effect now lives in a separate linear stage — see the third panel.",
@@ -23,10 +23,10 @@ const PANELS = [
     label: 'Mechanism Shift',
     stat: 'linear stage: +0.20',
     img: shapMechanism,
-    alt: 'Diverging bar chart: shift in prediction, Etihad Park vs Red Bull Arena, split into the linear stage\'s accessibility contribution (gold) and CatBoost residual SHAP for every other feature (green/red)',
+    alt: 'Diverging bar chart: shift in prediction, Etihad Park vs Sports Illustrated Stadium, split into the linear stage\'s accessibility contribution (gold) and CatBoost residual SHAP for every other feature (green/red)',
     title: "Accessibility is the single largest driver of the predicted increase — as a linear term, not a SHAP value",
     bullets: [
-      "Swap Red Bull Arena for Etihad Park: the linear stage's accessibility contribution (+0.20 log-attendance) is the largest single driver of the shift — computed directly from 04's coefficient, not TreeSHAP, since metro_size isn't a CatBoost input anymore.",
+      "Swap Sports Illustrated Stadium for Etihad Park: the linear stage's accessibility contribution (+0.20 log-attendance) is the largest single driver of the shift — computed directly from 04's coefficient, not TreeSHAP, since metro_size isn't a CatBoost input anymore.",
       "team_venue_tenure resetting to 0 (Gotham's first season at a new venue) pulls the residual down (−0.08) — consistent with this project's own leave-one-venue-out check finding debut seasons get under-predicted on average. venue_name itself is the largest residual mover (+0.20), but Etihad Park is an unseen category for CatBoost here — a smaller, different caveat from the metro_size fix, worth reading with real caution rather than as a confirmed effect.",
     ],
   },

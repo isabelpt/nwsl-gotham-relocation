@@ -9,11 +9,11 @@ export default function QuestionSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-4 text-[var(--color-ink)]/85 leading-relaxed">
             <p>
-              Gotham FC currently plays at Red Bull Arena in Harrison, NJ and has the 2nd lowest
+              Gotham FC currently plays at Sports Illustrated Stadium in Harrison, NJ and has the 2nd lowest
               attendance in the NWSL. In 2027, the team will relocate to Etihad Park,
               a new stadium they'll share with NYCFC at Willets Point, Queens.
               The stadium will be directly accesible by the 7 train, 
-              in contrast to the PATH ride to Red Bull Arena.
+              in contrast to the PATH ride to Sports Illustrated Stadium.
               How much does this move actually change who can get to a game, and does that accessibility gain move
               attendance?
             </p>
@@ -27,7 +27,7 @@ export default function QuestionSection() {
               the prior work this builds on). We honestly check whether that model generalizes to a
               venue it hasn't seen (it mostly doesn't — see Results). Second, a synthetic control
               analysis of four other NWSL teams' own stadium relocations, estimating what Gotham's
-              attendance would have looked like if they had stayed at Red Bull Arena vs. moving to
+              attendance would have looked like if they had stayed at Sports Illustrated Stadium vs. moving to
               Etihad Park.
             </p>
           </div>
@@ -40,7 +40,7 @@ export default function QuestionSection() {
               Washington). This is too small a sample for a robust model, but rather a precedent for what 
               stadium moves do to a team's own attendance, 
               and a donor pool for a synthetic-control estimate of what staying at
-              Red Bull Arena would look like in comparison to the move to Queens.
+              Sports Illustrated Stadium would look like in comparison to the move to Queens.
             </p>
             <div className="flex flex-wrap gap-2">
               <Tag>KC Current</Tag>

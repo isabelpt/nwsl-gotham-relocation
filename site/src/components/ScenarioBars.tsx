@@ -67,7 +67,7 @@ export default function ScenarioBars() {
       </div>
       <p className="font-mono-label text-[10px] text-[var(--color-ink)]/50 mt-5">
         Projected 2027 home attendance, Etihad Park capacity = 25,000. Hatched bar = counterfactual
-        reference (what staying at Red Bull Arena would look like), not part of the estimate.
+        reference (what staying at Sports Illustrated Stadium would look like), not part of the estimate.
         Bracket = the low–capacity-cap range this project actually reports for the move.
       </p>
     </div>

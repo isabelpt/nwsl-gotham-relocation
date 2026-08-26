@@ -23,7 +23,7 @@ export default function Hero() {
               By Isabel Prado-Tucker
             </p>
             <p className="mt-5 text-base text-[var(--color-ink)]/80 leading-relaxed max-w-md">
-              Gotham FC is moving from Red Bull Arena in Harrison, NJ to Etihad Park in Queens, NY in 2027. 
+              Gotham FC is moving from Sports Illustrated Stadium in Harrison, NJ to Etihad Park in Queens, NY in 2027. 
               The new stadium has a 60-minute reach of 3.2 million people. 
               Check out how it'll impact attendance.
             </p>
@@ -46,7 +46,7 @@ export default function Hero() {
           <div className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-3">
               <StatTile value="3.20M" label="Reachable within 60 min, Etihad Park" />
-              <StatTile value="3.0×" label="vs. Red Bull Arena's 1.05M" />
+              <StatTile value="3.0×" label="vs. Sports Illustrated Stadium's 1.05M" />
               <StatTile value="71%" label="of Manhattan reachable in 60 min" />
               <StatTile value="89–100%" label="projected 2027 capacity-fill" variant="estimate" />
             </div>

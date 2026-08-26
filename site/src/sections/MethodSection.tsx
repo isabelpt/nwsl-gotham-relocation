@@ -4,7 +4,7 @@ const STEPS = [
   {
     step: '01',
     title: 'Isochrones',
-    text: 'r5py transit+walk networks (5.0 km/h walk speed, a real fix over the default) build 30/45/60/90-min isochrones for Red Bull Arena, Etihad Park, and every other current NWSL venue.',
+    text: 'r5py transit+walk networks (5.0 km/h walk speed, a real fix over the default) build 30/45/60/90-min isochrones for Sports Illustrated Stadium, Etihad Park, and every other current NWSL venue.',
   },
   {
     step: '02',

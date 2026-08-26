@@ -14,8 +14,8 @@ const ROWS: Row[] = [
   {
     model: 'Linear + CatBoost residual (combined model)',
     method: 'log(metro_size) linear stage + CatBoost on the residual',
-    naive: 12796,
-    honest: 13656,
+    naive: 12368,
+    honest: 14422,
   },
   {
     model: 'Synthetic control',

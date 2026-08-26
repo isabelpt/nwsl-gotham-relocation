@@ -119,7 +119,7 @@ export default function ResultsSection() {
             src={gbtTreeWalkthrough}
             alt="One depth-2 tree from the GBT ensemble: root split on catchment_pop_60min_100k, second split on new_stadium_flag, four leaves with small log-attendance nudges"
             claim="A brand-new stadium gets a lower nudge than an established one — in tree 1 of 60, before any accessibility feature even separates them."
-            caption="This is a real tree from the GBT ensemble (60 trees total, each depth 2 — kept shallow specifically to limit how much a tree can memorize about team identity). Both Etihad Park (3.2M reachable) and Red Bull Arena (1.05M) clear the root's accessibility threshold, so this particular tree can't tell them apart on accessibility at all — it's the second split, on new_stadium_flag, that separates them, and it pushes Gotham's first season at a new venue down (+0.159), not up (+0.731 for an established stadium). The final prediction sums a small nudge like this from all 60 trees, shrunk by a 0.05 learning rate — no single tree is the whole story, but this one already echoes the team_venue_tenure finding from the SHAP check below, independently."
+            caption="This is a real tree from the GBT ensemble (60 trees total, each depth 2 — kept shallow specifically to limit how much a tree can memorize about team identity). Both Etihad Park (3.2M reachable) and Sports Illustrated Stadium (1.05M) clear the root's accessibility threshold, so this particular tree can't tell them apart on accessibility at all — it's the second split, on new_stadium_flag, that separates them, and it pushes Gotham's first season at a new venue down (+0.159), not up (+0.731 for an established stadium). The final prediction sums a small nudge like this from all 60 trees, shrunk by a 0.05 learning rate — no single tree is the whole story, but this one already echoes the team_venue_tenure finding from the SHAP check below, independently."
           />
         </div> */}
 
@@ -132,7 +132,7 @@ export default function ResultsSection() {
 
         <div className="mb-6">
           <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
-            Figure 3 — Etihad Park's reach vs. Red Bull Arena's
+            Figure 3 — Etihad Park's reach vs. Sports Illustrated Stadium's
           </p>
           <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen flex justify-center">
             <div className="w-full max-w-[1400px] px-6">
@@ -140,13 +140,13 @@ export default function ResultsSection() {
             </div>
           </div>
           <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mt-3">
-            Purple tracts reach Etihad Park faster than Red Bull Arena, while red tracts are the reverse.
+            Purple tracts reach Etihad Park faster than Sports Illustrated Stadium, while red tracts are the reverse.
             At the 60-minute threshold, Etihad Park reaches <strong>3.20M</strong>{' '}
-            people, <strong>3.0×</strong> Red Bull Arena's <strong>1.05M</strong> (both numbers
+            people, <strong>3.0×</strong> Sports Illustrated Stadium's <strong>1.05M</strong> (both numbers
             already corrected for r5py's too-slow default walking speed).
-            Red Bull Arena's only connection to Manhattan connection is PATH, while Etihad Park
+            Sports Illustrated Stadium's only connection to Manhattan connection is PATH, while Etihad Park
             has direct access to the 7 train. 71% of Manhattan is reachable from Etihad Park within 60 minutes,
-            versus 11% from Red Bull Arena. Drag the threshold slider or search an address to
+            versus 11% from Sports Illustrated Stadium. Drag the threshold slider or search an address to
             explore the comparison yourself.
           </p>
         </div>
@@ -196,7 +196,7 @@ export default function ResultsSection() {
 
         <TransitionHeading>The best prediction.</TransitionHeading>
         <p className="font-serif-heading text-lg font-semibold text-[var(--color-primary-deep)] mb-6">
-          Synthetic control: what staying at Red Bull Arena would have looked like instead.
+          Synthetic control: what staying at Sports Illustrated Stadium would have looked like instead.
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-8 items-start mb-14">

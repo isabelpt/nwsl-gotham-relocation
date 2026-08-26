@@ -20,7 +20,7 @@ export const SITE_CONFIG: Record<
   { label: string; minutesField: string; color: string; coords: [number, number] }
 > = {
   current: {
-    label: "Red Bull Arena",
+    label: "Sports Illustrated Stadium",
     minutesField: "rba_minutes",
     color: "#e34948",
     coords: [-74.1503, 40.7367],

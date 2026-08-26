@@ -39,7 +39,7 @@ export default function TakeawaySection() {
           <div className="flex flex-wrap gap-x-8 gap-y-3 mt-6 pt-6 border-t border-white/15">
             <div>
               <p className="font-mono text-2xl font-semibold text-white">3.0×</p>
-              <p className="font-mono-label text-[10px] text-white/60 mt-0.5">reach vs. Red Bull Arena — measured</p>
+              <p className="font-mono-label text-[10px] text-white/60 mt-0.5">reach vs. Sports Illustrated Stadium — measured</p>
             </div>
             <div>
               <p className="font-mono text-2xl font-semibold text-[var(--color-accent)]">13,116 → 22,137–25,000</p>

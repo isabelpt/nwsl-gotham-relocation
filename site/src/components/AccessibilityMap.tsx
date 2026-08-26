@@ -86,7 +86,7 @@ export default function AccessibilityMap() {
                   {hoverProps.neighborhood ? `Tract ${String(hoverProps.GEOID)}` : 'No NYC neighborhood match (NJ side)'}
                 </p>
                 <p className="text-sm text-[var(--color-ink)]/80">
-                  Red Bull Arena: {hoverRba != null ? `${Math.round(Number(hoverRba))} min` : '90+ min'}
+                  Sports Illustrated Stadium: {hoverRba != null ? `${Math.round(Number(hoverRba))} min` : '90+ min'}
                 </p>
                 <p className="text-sm text-[var(--color-ink)]/80">
                   Etihad Park: {hoverEtihad != null ? `${Math.round(Number(hoverEtihad))} min` : '90+ min'}
@@ -104,7 +104,7 @@ export default function AccessibilityMap() {
             <p className="font-mono-label text-[11px] text-[var(--color-primary)] mb-2">Reading the map</p>
             <div className="flex items-center gap-2 text-sm text-[var(--color-ink)]/80 mb-1">
               <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: SITE_CONFIG.current.color }} />
-              Red Bull Arena is faster
+              Sports Illustrated Stadium is faster
             </div>
             <div className="flex items-center gap-2 text-sm text-[var(--color-ink)]/80">
               <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: SITE_CONFIG.future.color }} />
