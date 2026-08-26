@@ -4,15 +4,11 @@ import scmPlacebo from '../assets/figures/scm-placebo-validation.png'
 const TAKEAWAYS = [
   {
     head: 'Gotham has not moved yet, so I tested on teams that have.',
-    body: "Normally you check a synthetic control against what actually happened next. Gotham's move is in the future, so there is nothing to check it against. Refitting the same method on Seattle and Washington Spirit gives me that check.",
+    body: "Normally you check a synthetic control against what actually happened next. Gotham's move is in the future, so there is nothing to check it against. To compensate, I refit the same method on Seattle and Washington Spirit.",
   },
   {
     head: 'It undershoots both of them, by a lot.',
-    body: 'The method lands 57 to 65 points below what each team really did. That gap is the useful part: it separates growth they would have gotten anyway from lift that came from moving, and only the second half gets applied to Gotham.',
-  },
-  {
-    head: 'Neither result is statistically significant.',
-    body: 'Both look strong against their donor pools, but a permutation test returns p = 0.2 for each. With only four teams available to permute, it cannot rule out chance. Too few NWSL teams have moved, and no modeling choice fixes that.',
+    body: 'The synthetic control lands 57 to 65 points below what each team really did. That gap is useful because it separates growth they would have gotten anyway from lift that came from moving, and only the second half gets applied to Gotham.',
   },
 ]
 
@@ -30,7 +26,7 @@ export default function PlaceboValidation() {
           </div>
           <figcaption className="p-3">
             <p className="font-mono-label text-[10px] text-[var(--color-primary)] mb-1.5">
-              Figure 6 &middot; The method vs. reality
+              Figure 5 &middot; The method vs. reality
             </p>
             <p className="text-xs text-[var(--color-ink)]/70 leading-relaxed">
               Both pre-move fits are tight, and both teams pull away from their no-move twin the moment

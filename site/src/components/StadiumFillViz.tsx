@@ -203,17 +203,12 @@ export default function StadiumFillViz() {
               <strong>13,116</strong> in 2028, roughly half the building. Adding the relocation lift puts
               them between <strong>17,961</strong> and a sellout.
             </p>
-            <p className="text-sm text-[var(--color-ink)]/60 leading-relaxed">
-              Treat 13,116 as a floor rather than a forecast. It is anchored on 2026 growth and does not
-              extrapolate another year on top.
-            </p>
           </div>
         </div>
       </div>
 
       <p className="font-mono-label text-[10px] text-[var(--color-ink)]/50 mt-5">
-        {TOTAL_DOTS} dots, each about {(100 / TOTAL_DOTS).toFixed(2)}% of capacity. Scenario endpoints for
-        2028, not a claim about which seats fill.
+        {TOTAL_DOTS} dots, each about {(100 / TOTAL_DOTS).toFixed(2)}% of capacity. 
       </p>
     </div>
   )

@@ -36,7 +36,7 @@ const PANELS = [
     n: '~90 team-seasons (14 x 9 panel)',
     usedBy: 'Synthetic control',
     coverage: '2016-2019, 2022-2026 (10-14 teams)',
-    note: 'Kansas City is dropped here and from training, because it sells out nearly every game and its numbers reflect the cap, not demand.',
+    note: 'Kansas City is dropped here and from training, because it sells out nearly every game, so its attendance does not represent true demand.',
   },
   {
     unit: 'Census tract',
@@ -111,8 +111,8 @@ export default function DataSection() {
               </tbody>
             </table>
             <p className="px-4 py-2 text-xs text-[var(--color-primary)]/70 border-t border-[var(--color-line)]">
-              The hard limit on this project is not messy data, it is sample size. I have 1,132 games but
-              only four recent relocations to learn a move effect from, and the league is 13 years old with
+              This project is limited by sample size due to the league's age and some unfortunate events in those years (ahem- COVID). I have 1,132 games with
+              only four recent relocations and 
               nine usable seasons.</p>
           </div>
         </div>

@@ -4,7 +4,7 @@ const STEPS = [
   {
     step: '01',
     title: 'Map who can get there',
-    text: "I built transit and walking networks for every NWSL metro with r5py and drew 30, 45, 60, and 90 minute travel zones from each stadium for a Saturday 6pm kickoff, then summed the census population inside them. r5py walks people at 3.6 km/h by default, which is far too slow. I checked a real route against Google Maps and corrected it to 5.0 km/h. That fix alone took the old stadium's hourly reach from 620,000 to 1.05 million.",
+    text: "I built transit and walking networks for every NWSL metro with r5py and drew 30, 45, 60, and 90 minute travel zones from each stadium for a Saturday 6pm kickoff, then summed the census population inside them. r5py walks people at 3.6 km/h by default, which (as a New Yorker) is far too slow, so I corrected it to 5.0 km/h.",
   },
   {
     step: '02',
@@ -14,12 +14,12 @@ const STEPS = [
   {
     step: '03',
     title: 'Try hard to break it',
-    text: 'I held out one entire team and venue pair at a time, retrained, and predicted only the venue the model had never seen. This is the test that matters, since Gotham is a familiar team but Etihad Park is a new building. The model does not survive it, and that failure shapes how I report everything downstream.',
+    text: 'I held out one entire team and venue pair at a time, retrained, and predicted only the venue the model had never seen. This tells us if the model can predict on a venue it has never seen, like Etihad Park. Spoiler alert: the model fails this test, which is why I did the next step.',
   },
   {
     step: '04',
     title: 'Ask comparable teams instead',
-    text: 'Synthetic control builds a fake no-move Gotham from eight teams that stayed put, then I validate the whole approach by rerunning it on Seattle and Washington Spirit, whose moves already happened and can be checked against reality.',
+    text: 'Synthetic control builds a fake no-move Gotham from eight teams that stayed put, then I validate the approach by rerunning it on Seattle and Washington Spirit, whose moves already happened and can be checked against real post-relocation data.',
   },
 ]
 

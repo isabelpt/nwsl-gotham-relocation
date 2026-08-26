@@ -10,7 +10,7 @@ const HYPOTHESES = [
   {
     id: 'H2',
     short: 'Access, not novelty',
-    text: 'Reach stays the biggest factor even after I control for the opponent, the schedule, the weather, and how good the team is.',
+    text: 'Reach is the biggest factor in attendance increases after stadium relocations.',
   },
   {
     id: 'H3',
@@ -28,18 +28,17 @@ export default function QuestionSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           <div className="md:col-span-2 space-y-4 text-[var(--color-ink)]/85 leading-relaxed">
             <p>
-              Gotham FC is currently 1st in the league (as of August, 2026), but you wouldn't know it from looking at the stands.
-              In 2028 they move to Etihad Park in Willets Point, Queens from Harrison, New Jersey, off the 7 train instead of a PATH ride out of Manhattan. 
-              That number of people who can reach a home game in an hour will go from 1.05 million to 3.20 million, more than 2x the reach of any current NWSL stadium.
+              Gotham FC is dominant on the pitch, but you wouldn't know it from looking at the stands.
+              That will hopefully change in 2028 when they move to Etihad Park in Willets Point, Queens from Harrison, New Jersey. 
+              That number of people who can reach a home game in an hour will go from 1.05 million to 3.20 million, more than <strong>2x the reach of any current NWSL stadium</strong>.
             </p>
             <p>
-              Gotham's July 2026 game at Citi Field,
-              across the street from the new site, drew <strong>42,175</strong> fans. Their normal home
-              average is about <strong>8,110</strong>.
+              A good sign: Gotham's July 2026 game at Citi Field,
+              across the street from their new venue, drew <strong>42,175</strong> fans, <strong>5x</strong> their average attendance.
             </p>
             <p>
-              That beings me to my question: does making a stadium easier to get to actually put more people in it? I test that three
-              ways.
+              That brings me to my question: does making a stadium easier to get to actually put more
+              people in it? I test that three ways.
             </p>
           </div>
 
@@ -48,15 +47,15 @@ export default function QuestionSection() {
             <p className="text-sm text-[var(--color-ink)]/80 leading-relaxed">
               Only four NWSL teams have moved recently, and a new stadium changes many factors beyond accessibility.
               On top of that the whole league is growing fast, from
-              5,711 average attendance in 2016 to 10,243 in 2025. Any honest estimate has to separate
-              Gotham's move from all of these competing factors.
+              5,711 average attendance in 2016 to 10,243 in 2025. Making a confident estimate requires separating
+              all of these competing factors.
             </p>
           </div>
         </div>
 
         <div>
           <p className="font-mono-label text-xs text-[var(--color-primary)] mb-4">
-            Three predictions, answered one at a time in Results
+            Three predictions, based on existing literature
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {HYPOTHESES.map((h) => (

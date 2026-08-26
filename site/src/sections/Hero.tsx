@@ -23,11 +23,9 @@ export default function Hero() {
               By Isabel Prado-Tucker
             </p>
             <p className="mt-5 text-base text-[var(--color-ink)]/80 leading-relaxed max-w-md">
-              Gotham FC moves from New Jersey to Queens in 2028, and the number of people who
-              can reach a home game in an hour triple. They currently draw
-              some of the worst crowds in the league, despite representing the biggest market and consistently performing well on the pitch. 
-              I found out if this increase in reach will fill more seats.</p>
-            <div className="mt-6 flex flex-wrap gap-3">
+              Gotham FC's reach is about to triple.
+              Will this be enough to fix their attendance problem?</p>
+            {/* <div className="mt-6 flex flex-wrap gap-3">
               <a
                 href="#results"
                 className="font-mono-label text-xs bg-[var(--color-primary)] text-white border border-[var(--color-primary-deep)] px-5 py-3 shadow-offset-sm transition-all duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-offset"
@@ -40,7 +38,7 @@ export default function Hero() {
               >
                 Read the story
               </a>
-            </div>
+            </div> */}
           </div>
 
           <div className="flex flex-col gap-4">

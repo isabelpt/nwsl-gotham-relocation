@@ -40,7 +40,7 @@ export default function TakeawaySection() {
         <div className="border border-[var(--color-primary-deep)] bg-[var(--color-primary-deep)] text-white p-8 shadow-offset">
           <p className="font-mono-label text-[11px] text-[var(--color-accent)] mb-3">The short answer</p>
           <p className="font-serif-heading text-3xl md:text-4xl font-semibold leading-snug max-w-3xl">
-            Almost certainly yes, but I cannot concretely pin down the magnitude of this effect. Gotham should
+            Yes, but the magnitude is unclear. Gotham should
             draw between 17,961 and a sellout in 2028, against 13,116 if they had stayed in Harrison.
           </p>
           <div className="flex flex-wrap gap-x-8 gap-y-3 mt-6 pt-6 border-t border-white/15">
@@ -92,9 +92,10 @@ export default function TakeawaySection() {
               What this study can't prove
             </p>
             <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed">
-              I am confident that moving raises attendance? Why this happens is something I'm less sure about.
-              All of my results suggest that transit access plays a role, but I can't isolate it from
-              all of the factors that play into a stadium move (novelty, better facilities, marketing, etc.)
+              I am confident that moving raises attendance. Why this happens is something I'm less sure
+              about. All of my results suggest that transit access plays a role, but I can't isolate it
+              from all of the factors that play into a stadium move (novelty, better facilities,
+              marketing, etc.).
             </p>
           </div>
           <div>
@@ -106,8 +107,7 @@ export default function TakeawaySection() {
               stadium&rsquo;s honeymoon effect from access, and test whether one-off games in big
               venues, like Gotham&rsquo;s 42,175-fan night at Citi Field, can predict what a team draws
               after it moves. Nobody knows the ceiling on women&rsquo;s sports growth right now, which is
-              why I started this in the first place. Needless to say I'm excited to see how Gotham's attendance
-              pans out and to enjoy the new stadium!
+              why I started this in the first place. 
             </p>
           </div>
         </div>
