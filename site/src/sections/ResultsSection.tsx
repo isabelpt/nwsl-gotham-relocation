@@ -113,7 +113,7 @@ export default function ResultsSection() {
           <ModelComparisonTable />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-[34%_1fr] gap-6 md:gap-8 items-start mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-6 md:gap-8 items-start mb-4">
           <figure className="bg-[var(--color-paper)] border border-[var(--color-line)] shadow-offset-sm">
             <div className="bg-white border-b border-[var(--color-line)]">
               <img
@@ -133,34 +133,48 @@ export default function ResultsSection() {
             </figcaption>
           </figure>
 
-          <ul className="space-y-4">
-            <li>
-              <p className="font-serif-heading text-lg font-semibold text-[var(--color-primary-deep)] leading-snug">
-                It looks great, and that's not the whole picture.
-              </p>
-              <p className="text-[15px] text-[var(--color-ink)]/80 leading-snug mt-1">
-                A normal 80/20 split scores R&sup2; = 0.788. Hold out one whole venue and it collapses to{' '}
-                <strong>0.004</strong>, about as good as guessing the league average.
-              </p>
-            </li>
-            <li>
-              <p className="font-serif-heading text-lg font-semibold text-[var(--color-primary-deep)] leading-snug">
-                It is still my best version yet.
-              </p>
-              <p className="text-[15px] text-[var(--color-ink)]/80 leading-snug mt-1">
-                Better than the linear stage alone (&minus;0.045) and my earlier untuned runs
-                (&minus;0.167). Better than negative is not the same as working.
-              </p>
-            </li>
-            <li>
-              <p className="font-serif-heading text-lg font-semibold text-[var(--color-primary-deep)] leading-snug">
-                So Etihad Park gets a range, not a number.
-              </p>
-              <p className="text-[15px] text-[var(--color-ink)]/80 leading-snug mt-1">
-                No model here can predict a stadium it has never seen, and the error swing bears that out:
-                under 1,200 fans at some venues, over 10,000 at others.
-              </p>
-            </li>
+          <ul className="space-y-5">
+            {[
+              {
+                head: "It looks great, and that's not the whole picture.",
+                body: (
+                  <>
+                    A normal 80/20 split scores R&sup2; = 0.788. Hold out one whole venue and it collapses
+                    to <strong>0.004</strong>, about as good as guessing the league average.
+                  </>
+                ),
+              },
+              {
+                head: 'It is still my best version yet.',
+                body: (
+                  <>
+                    Better than the linear stage alone (&minus;0.045) and my earlier untuned runs
+                    (&minus;0.167). Better than negative is not the same as working.
+                  </>
+                ),
+              },
+              {
+                head: 'So Etihad Park gets a range, not a number.',
+                body: (
+                  <>
+                    No model here can predict a stadium it has never seen, and the error swing bears that
+                    out: under 1,200 fans at some venues, over 10,000 at others.
+                  </>
+                ),
+              },
+            ].map((t) => (
+              <li key={t.head}>
+                <p className="font-serif-heading text-lg font-semibold text-[var(--color-primary-deep)] leading-snug">
+                  {t.head}
+                </p>
+                <p className="flex gap-2.5 text-[15px] text-[var(--color-ink)]/80 leading-snug mt-1.5">
+                  <span className="shrink-0 text-[var(--color-accent)] font-semibold" aria-hidden>
+                    &rarr;
+                  </span>
+                  <span>{t.body}</span>
+                </p>
+              </li>
+            ))}
           </ul>
         </div>
 
