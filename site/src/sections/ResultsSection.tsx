@@ -308,9 +308,6 @@ export default function ResultsSection() {
         </div>
 
         <div className="mb-10">
-          <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
-            Figure 6 &middot; Checking that method on moves that already happened
-          </p>
           <PlaceboValidation />
         </div>
 
