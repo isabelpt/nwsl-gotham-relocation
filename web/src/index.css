@@ -23,3 +23,53 @@ body {
   color: var(--ink);
   background: var(--paper);
 }
+
+.app-root {
+  display: flex;
+  /* dvh accounts for mobile browser chrome (address bar) shrinking the viewport;
+     100vh there is taller than what's actually visible and clips the layout. */
+  height: 100dvh;
+  width: 100%;
+}
+
+.app-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  padding: 1.5rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  border-right: 1px solid #ddd;
+  background: #fff;
+}
+
+.app-main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Below ~768px the side-by-side layout squeezes the map into a sliver and its drag-to-pan
+   gestures swallow touches meant to scroll the page. Stack instead: map on top at a fixed
+   share of the viewport, sidebar below in its own scroll container, so neither one steals
+   scroll gestures aimed at the other. */
+@media (max-width: 768px) {
+  .app-root {
+    flex-direction: column;
+    height: 100dvh;
+  }
+
+  .app-main {
+    order: 1;
+    flex: 0 0 45vh;
+    min-height: 0;
+  }
+
+  .app-sidebar {
+    order: 2;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    border-right: none;
+    border-top: 1px solid #ddd;
+  }
+}

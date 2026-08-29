@@ -54,17 +54,8 @@ export default function App() {
     hoverProps?.cluster != null ? clusters.find((c) => c.id === Number(hoverProps.cluster)) : undefined;
 
   return (
-    <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
-      <aside
-        style={{
-          width: 320,
-          flexShrink: 0,
-          padding: "1.5rem",
-          overflowY: "auto",
-          borderRight: "1px solid #ddd",
-          background: "#fff",
-        }}
-      >
+    <div className="app-root">
+      <aside className="app-sidebar">
         <h1 style={{ fontSize: "1.15rem", lineHeight: 1.3, marginBottom: "0.25rem" }}>
           Gotham FC's Move to Queens
         </h1>
@@ -336,7 +327,7 @@ export default function App() {
           Isochrone bands, clusters, and transit lines are pre-computed, not routed live in-browser.
         </p>
       </aside>
-      <main style={{ flex: 1 }}>
+      <main className="app-main">
         <IsochroneMap
           ref={mapRef}
           view={view}
