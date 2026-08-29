@@ -5,7 +5,7 @@ export default function SectionHeading({
 }: {
   /** Optional. The numbered "01 / 02 / 03" rail was dropped from the page: it announced a lab
    * report before the reader had read a word. The narrative arc it marked is still there and
-   * still in order — the eyebrow names each stage instead, quietly. */
+   * still in order; the eyebrow names each stage instead, quietly. */
   index?: string
   title: string
   eyebrow?: string

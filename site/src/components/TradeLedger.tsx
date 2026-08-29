@@ -58,7 +58,7 @@ function Side({
   color: string
   active: boolean
   reduced: boolean
-  /** False until the figures have loaded. Renders an em dash rather than a confident 0.00M,
+  /** False until the figures have loaded. Renders an en dash rather than a confident 0.00M,
    * which would be a wrong number rather than an absent one. */
   ready: boolean
 }) {
@@ -66,7 +66,7 @@ function Side({
   return (
     <div className="border border-[var(--color-line)] bg-[var(--color-paper)] p-5 shadow-offset-sm flex-1">
       <p className="font-serif-heading text-4xl md:text-5xl font-semibold tabular-nums" style={{ color }}>
-        {ready ? millions(shown) : '—'}
+        {ready ? millions(shown) : '–'}
       </p>
       <p className="font-serif-heading text-lg font-semibold text-[var(--color-primary-deep)] mt-2 leading-snug">
         {headline}

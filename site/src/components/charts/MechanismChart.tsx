@@ -31,8 +31,8 @@ export default function MechanismChart({ label }: { label?: string }) {
       title="Reach drives almost the whole predicted jump"
       deck={
         <>
-          Everything else the model knows about a match — the opponent, the weather, the day of the
-          week, the team's form — barely moves the answer. Reach is also the one input I gave its
+          Everything else the model knows about a match (the opponent, the weather, the day of the
+          week, the team's form) barely moves the answer. Reach is also the one input I gave its
           own model, so it had the best chance to matter.
         </>
       }

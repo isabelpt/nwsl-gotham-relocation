@@ -38,7 +38,7 @@ export default function VenueErrorChart({ label }: { label?: string }) {
           return (
             <li key={`${v.team}-${v.venue}`} className="grid grid-cols-[1fr] sm:grid-cols-[15rem_1fr] gap-x-3 items-center">
               <p className="text-[12px] leading-tight text-[var(--color-ink)]/85 sm:text-right">
-                {v.team} <span className="text-[var(--color-ink)]/55">— {v.venue}</span>{' '}
+                {v.team} <span className="text-[var(--color-ink)]/55">&middot; {v.venue}</span>{' '}
                 <span className="font-mono text-[11px] text-[var(--color-ink)]/50">
                   ({v.meanAttendance.toLocaleString()})
                 </span>

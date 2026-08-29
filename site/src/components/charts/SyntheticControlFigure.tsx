@@ -27,9 +27,14 @@ const Y_TICKS = [0, 5000, 10000, 15000, 20000, 25000]
  * rather than the league getting more popular anyway. Condensed down from the full placebo
  * figure (dumbbell chart + table) into the one number that matters here: growth explains some of
  * it, the move explains the rest, and this is the rest as a share of the whole. */
+// FIXED 2026-08-29: this was computing (actual - scmImplied) / actual, which is growth's
+// share of the rise, not the move's -- the opposite of the "not explained by growth" label
+// and this comment's own stated intent. scmImpliedLiftPct is already the growth-corrected,
+// move-attributable lift (see data/relocations.ts and the paper's Discussion), so the move's
+// share of the total observed rise is scmImplied / actual, not the complement of that.
 const placeboSeparation = placebos.map((p) => ({
   team: p.team,
-  pct: ((p.actualLiftPct - p.scmImpliedLiftPct) / p.actualLiftPct) * 100,
+  pct: (p.scmImpliedLiftPct / p.actualLiftPct) * 100,
 }))
 
 function xPos(year: number) {
@@ -225,7 +230,7 @@ export default function SyntheticControlFigure({ label }: { label?: string }) {
           </ul>
           <p className="text-[11px] text-[var(--color-ink)]/55 mt-3 leading-relaxed">
             Share of each team's real post-move rise that the growth-only synthetic twin didn't
-            predict &mdash; the part this project attributes to the move itself, not the league
+            predict: the part this project attributes to the move itself, not the league
             getting more popular anyway. Only that share is what gets applied to Gotham.
           </p>
         </div>

@@ -29,7 +29,7 @@ export default function CoefficientChart({ label }: { label?: string }) {
         <>
           Each doubling of the population that can reach a stadium within an hour is worth about{' '}
           <strong>{Math.round(fx.pointPct)}% more fans</strong>. The interval stays above zero,
-          which is what makes the effect real — and it is wide, which is why every estimate built
+          which is what makes the effect real, and it is wide, which is why every estimate built
           on it is reported as a range.
         </>
       }

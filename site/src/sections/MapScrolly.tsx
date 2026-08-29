@@ -44,7 +44,7 @@ const STEPS: Step[] = [
     head: 'New Jersey pays for it.',
     body: (s) =>
       s
-        ? `${s.njWorsePop.toLocaleString()} people, almost all of them on the club's current side of the river, end up farther away — by ${Math.round(s.avgMinutesLost)} minutes on average. ${s.ringLostPop.toLocaleString()} of them fall out of the one-hour ring entirely.`
+        ? `${s.njWorsePop.toLocaleString()} people, almost all of them on the club's current side of the river, end up farther away, by ${Math.round(s.avgMinutesLost)} minutes on average. ${s.ringLostPop.toLocaleString()} of them fall out of the one-hour ring entirely.`
         : "The club's current side of the river ends up farther from the stadium.",
   },
   {
