@@ -248,8 +248,9 @@ export default function StadiumFillViz({
             <div className="border-t border-[var(--color-line)] mt-4 pt-4 space-y-3">
               <p className="text-sm text-[var(--color-ink)]/75 leading-relaxed">
                 Staying in Harrison and riding league growth alone, Gotham reaches about{' '}
-                <strong>13,116</strong> in 2028, roughly half the building. Adding the relocation lift puts
-                them between <strong>17,961</strong> and a sellout.
+                <strong>10,926</strong> in 2028, a bit under half the building. Adding the relocation
+                lift puts them between <strong>14,962</strong> and <strong>22,849</strong>, close to a
+                sellout at the high end but still short of one.
               </p>
             </div>
           )}

@@ -77,15 +77,6 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Deliberate, narrow exception to the "no rounded corners" reset above:
-   the decorative pitch motif's center circle/spot need an actual circle.
-   The universal `* { border-radius: 0 !important }` rule beats any inline
-   style without !important, so this needs its own !important + a more
-   specific selector than `*` to win. Nothing else should use this. */
-.pitch-circle {
-  border-radius: 50% !important;
-}
-
 .font-serif-heading {
   font-family: var(--font-serif);
 }

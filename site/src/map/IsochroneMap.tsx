@@ -180,13 +180,16 @@ const IsochroneMap = forwardRef<IsochroneMapHandle, Props>(function IsochroneMap
       container: mapContainer.current,
       style: BASEMAP_STYLE,
       center: NYC_CENTER,
-      zoom: 9.3,
+      zoom: 9.55,
       minZoom: 9,
       maxZoom: 14,
       maxBounds: NYC_METRO_BOUNDS,
-      // Requires ctrl/cmd + scroll to zoom, so an ordinary page-scroll that happens to pass
-      // over the map scrolls the page instead of yanking the map's zoom level out.
-      cooperativeGestures: true,
+      // Wheel-zoom off entirely, so an ordinary page-scroll that happens to pass over the map
+      // scrolls the page instead of yanking the map's zoom level out. `cooperativeGestures`
+      // achieves the same end but does it by popping a "use ctrl+scroll" hint on every scroll,
+      // which fires constantly while this map is pinned during MapScrolly. The zoom buttons
+      // and pinch-to-zoom still work either way.
+      scrollZoom: false,
     })
     mapRef.current = map
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')

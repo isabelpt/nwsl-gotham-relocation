@@ -41,7 +41,7 @@ export default function TakeawaySection() {
           <p className="font-mono-label text-[11px] text-[var(--color-accent)] mb-3">The short answer</p>
           <p className="font-serif-heading text-3xl md:text-4xl font-semibold leading-snug max-w-3xl">
             Yes, but the magnitude is unclear. Gotham should
-            draw between 17,961 and a sellout in 2028, against 13,116 if they had stayed in Harrison.
+            draw between 14,962 and 22,849 in 2028, against 10,926 if they had stayed in Harrison.
           </p>
           <div className="flex flex-wrap gap-x-8 gap-y-3 mt-6 pt-6 border-t border-white/15">
             <div>
@@ -50,12 +50,12 @@ export default function TakeawaySection() {
             </div>
             <div>
               <p className="font-mono text-2xl font-semibold text-[var(--color-accent)]">
-                13,116 &rarr; 17,961&ndash;25,000
+                10,926 &rarr; 14,962&ndash;22,849
               </p>
               <p className="font-mono-label text-[10px] text-white/60 mt-0.5">2028 attendance, stay vs. move</p>
             </div>
             <div>
-              <p className="font-mono text-2xl font-semibold text-white">72&ndash;100%</p>
+              <p className="font-mono text-2xl font-semibold text-white">60&ndash;91%</p>
               <p className="font-mono-label text-[10px] text-white/60 mt-0.5">of Etihad Park filled</p>
             </div>
           </div>
@@ -95,7 +95,7 @@ export default function TakeawaySection() {
               I am confident that moving raises attendance. Why this happens is something I'm less sure
               about. All of my results suggest that transit access plays a role, but I can't isolate it
               from all of the factors that play into a stadium move (novelty, better facilities,
-              marketing, etc.).
+              marketing, etc.)
             </p>
           </div>
           <div>

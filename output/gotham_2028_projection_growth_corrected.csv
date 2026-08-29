@@ -1,0 +1,5 @@
+scenario,attendance_2028,pct_of_capacity
+no_move_baseline,10925.76396435234,43.70305585740936
+"etihad_park_low (San Diego, growth-corrected, estimated)",14961.52138789855,59.8460855515942
+"etihad_park_mid (Seattle, growth-corrected, measured)",15991.627409946106,63.96650963978442
+"etihad_park_high (Washington Spirit, growth-corrected, measured)",22849.31121589648,91.39724486358591

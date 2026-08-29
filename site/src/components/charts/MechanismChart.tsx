@@ -5,17 +5,24 @@ import ChartFrame from './ChartFrame'
 // width. Each row is a full-width track with a zero line down the middle; the bar grows left or
 // right from there.
 const SPAN = Math.max(...mechanismShift.map((b) => Math.abs(b.pct)))
-/** Position of the zero line across the track. */
-const HALF = 50
-/** How far the longest bar is allowed to travel from the zero line. Deliberately short of the
- * full half-width: the value labels sit just past the bar ends, and at a full 50% the biggest
- * bar pushed its own label off the edge of the chart. */
-const MAX_EXTENT = 42
-/** Below this the bar is visually nothing, so the value label is dropped rather than crowding the
- * zero line with a column of "0.0%". */
-const NOISE = 0.15
+/** Position of the zero line across the track. Off-center rather than at 50%: the biggest
+ * negative bar (-3.1%) is tiny next to the biggest positive one (+21.8%), so a centered zero
+ * line left almost the entire left half of every row empty. Both directions share one scale
+ * (see `width` below), so this just gives the side that actually has data the room. */
+const HALF = 14
+/** How far the longest bar is allowed to travel from the zero line, leaving a track-only margin
+ * on each side for the zero line itself. */
+const MAX_EXTENT = 84
 
 const ACCESSIBILITY = 'People who can reach the stadium'
+
+/** One decimal reads fine down at the "+21.8%" end, but it flattens the five smallest bars into
+ * "-0.0%"/"+0.0%" -- indistinguishable from zero and from each other. Two decimals below 1%
+ * keeps those real, if tiny, effects legible instead of dropping their labels altogether. */
+function formatPct(pct: number) {
+  const decimals = Math.abs(pct) < 1 ? 2 : 1
+  return `${pct > 0 ? '+' : ''}${pct.toFixed(decimals)}%`
+}
 
 export default function MechanismChart({ label }: { label?: string }) {
   return (
@@ -33,7 +40,7 @@ export default function MechanismChart({ label }: { label?: string }) {
         <>
           Linear accessibility stage plus TreeSHAP on the CatBoost residual, averaged over 54
           matched fixtures. Effects combine multiplicatively to a net {mechanismNetPct.toFixed(0)}%
-          change. Bars below 0.2% are drawn but not labelled.
+          change.
         </>
       }
     >
@@ -47,14 +54,12 @@ export default function MechanismChart({ label }: { label?: string }) {
             : positive
               ? 'var(--color-primary)'
               : 'var(--color-no)'
+          const valueText = formatPct(b.pct)
           return (
-            <li
-              key={b.label}
-              className="grid grid-cols-[1fr] sm:grid-cols-[14rem_1fr] gap-x-3 items-center"
-            >
+            <li key={b.label} className="flex flex-col sm:flex-row sm:items-center gap-x-3 gap-y-0.5">
               <p
                 className={
-                  'text-[12px] leading-tight sm:text-right ' +
+                  'text-[12px] leading-tight sm:w-56 sm:shrink-0 sm:text-right ' +
                   (isReach
                     ? 'text-[var(--color-primary-deep)] font-semibold'
                     : 'text-[var(--color-ink)]/80')
@@ -62,33 +67,33 @@ export default function MechanismChart({ label }: { label?: string }) {
               >
                 {b.label}
               </p>
-              <div className="relative h-4">
-                {/* Zero line */}
-                <div
-                  className="absolute inset-y-0 w-px bg-[var(--color-ink)]/30"
-                  style={{ left: `${HALF}%` }}
-                />
-                <div
-                  className="absolute inset-y-0"
-                  style={{
-                    backgroundColor: color,
-                    width: `${width}%`,
-                    left: positive ? `${HALF}%` : `${HALF - width}%`,
-                  }}
-                />
-                {Math.abs(b.pct) >= NOISE && (
-                  <span
-                    className="absolute top-1/2 -translate-y-1/2 font-mono text-[11px] text-[var(--color-ink)]/75 whitespace-nowrap"
-                    style={
-                      positive
-                        ? { left: `calc(${HALF + width}% + 6px)` }
-                        : { right: `calc(${HALF + width}% + 6px)` }
-                    }
-                  >
-                    {b.pct > 0 ? '+' : ''}
-                    {b.pct.toFixed(1)}%
-                  </span>
-                )}
+              {/* Value labels live in their own fixed-width columns outside the track, rather
+                  than floating at the bar's own tip -- a long bar (the reach bar reaches 84% of
+                  the track) left no room for an outside label there, and the only fix that didn't
+                  either clip the text or print it on top of the bar's own fill was to stop
+                  anchoring the label to the bar at all. */}
+              <div className="flex-1 grid grid-cols-[2.75rem_1fr_3.25rem] items-center gap-x-2">
+                <span className="font-mono text-[11px] text-[var(--color-ink)]/75 text-right whitespace-nowrap">
+                  {!positive ? valueText : ''}
+                </span>
+                <div className="relative h-4">
+                  {/* Zero line */}
+                  <div
+                    className="absolute inset-y-0 w-px bg-[var(--color-ink)]/30"
+                    style={{ left: `${HALF}%` }}
+                  />
+                  <div
+                    className="absolute inset-y-0"
+                    style={{
+                      backgroundColor: color,
+                      width: `${width}%`,
+                      left: positive ? `${HALF}%` : `${HALF - width}%`,
+                    }}
+                  />
+                </div>
+                <span className="font-mono text-[11px] text-[var(--color-ink)]/75 whitespace-nowrap">
+                  {positive ? valueText : ''}
+                </span>
               </div>
             </li>
           )

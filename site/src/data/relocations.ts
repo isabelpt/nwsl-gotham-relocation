@@ -74,9 +74,10 @@ export const relocations: RelocationRow[] = [
 ]
 
 // Placebo validation of the synthetic-control design on the two relocations that already happened
-// (output/synthetic_control_placebo_significance.png + the SCM-implied lifts in Figure 3).
-// The gap between the SCM-implied lift and the raw lift is what separates relocation effect from
-// league-wide growth, and it is what the growth-corrected projections in scenarios.ts apply.
+// (output/synthetic_control_placebo_significance.png), condensed into the "does this method
+// actually work" callout in Figure 2 (SyntheticControlFigure). The gap between the SCM-implied
+// lift and the raw lift is what separates relocation effect from league-wide growth, and it is
+// what the growth-corrected projections in scenarios.ts apply.
 export type PlaceboRow = {
   team: string
   scmImpliedLiftPct: number

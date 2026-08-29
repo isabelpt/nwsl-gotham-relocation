@@ -3,12 +3,12 @@ import HypothesisVerdict from '../components/HypothesisVerdict'
 import TransitionHeading from '../components/TransitionHeading'
 import MapScrolly from './MapScrolly'
 import ModelComparisonTable from '../components/ModelComparisonTable'
-import RelocationTable from '../components/RelocationTable'
-import PlaceboValidation from '../components/PlaceboValidation'
 import StadiumScrolly from './StadiumScrolly'
 import CoefficientChart from '../components/charts/CoefficientChart'
 import MechanismChart from '../components/charts/MechanismChart'
 import VenueErrorChart from '../components/charts/VenueErrorChart'
+import SyntheticControlFigure from '../components/charts/SyntheticControlFigure'
+import RelocationScatter from '../components/charts/RelocationScatter'
 
 export default function ResultsSection() {
   return (
@@ -20,7 +20,7 @@ export default function ResultsSection() {
         <div className="border border-[var(--color-primary-deep)] bg-[var(--color-primary-deep)] text-white p-8 shadow-offset mb-10">
           <p className="font-mono-label text-[11px] text-[var(--color-accent)] mb-3">The answer</p>
           <p className="font-serif-heading text-3xl md:text-4xl font-semibold leading-snug max-w-3xl">
-            Gotham should draw between 17,961 and a sellout at Etihad Park, against 13,116 if they
+            Gotham should draw between 14,962 and 22,849 at Etihad Park, against 10,926 if they
             had stayed in Harrison.
           </p>
           <p className="text-white/70 leading-relaxed mt-5 max-w-2xl">
@@ -56,30 +56,27 @@ export default function ResultsSection() {
           <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 md:gap-8 px-5 py-5 items-center">
             <div>
               <p className="font-serif-heading text-4xl font-semibold text-[var(--color-primary-deep)] whitespace-nowrap">
-                +4,845 to +11,884
+                +4,036 to +11,924
               </p>
               <p className="font-mono-label text-[11px] text-[var(--color-primary)] mt-1">
                 extra fans from the move
               </p>
               <p className="text-xs text-[var(--color-ink)]/60 mt-2 leading-relaxed max-w-[15rem]">
-                14 to 88 percent more than the model predicted, on top of the growth Gotham gets either
-                way.
+                5 percent below to 89 percent above what the predictive model estimated, on top of the
+                growth Gotham gets either way.
               </p>
             </div>
             <div className="border-l-0 md:border-l border-[var(--color-line)] md:pl-8">
               <p className="text-[15px] text-[var(--color-ink)]/85 leading-snug mb-3">
-                Rather than ask a model to imagine a stadium, I asked what actually happened to teams
-                that moved. Synthetic control builds a fake no-move Gotham out of eight teams that
-                stayed put, weighted so their combined history tracks Gotham's own through 2026. North
-                Carolina Courage (0.417), Orlando Pride (0.310), and Washington Spirit (0.273) carry
-                nearly all of it.
+                Rather than ask a model to imagine a new stadium, I looked at what actually happened to teams
+                that have already moved. I used synthetic control to simulate what would happen if Gotham doesn't move,
+                while simulating Gotham's post-relocation attendance based on past relocations.
               </p>
             </div>
           </div>
-        </div>
-
-        <div className="mb-12">
-          <PlaceboValidation />
+          <div className="px-5 pb-5 pt-1 border-t border-[var(--color-line)]">
+            <SyntheticControlFigure label="Figure 2 · What synthetic control actually shows" />
+          </div>
         </div>
 
         {/* ---- Answer 2: the predictive model ---- */}
@@ -155,7 +152,7 @@ export default function ResultsSection() {
           </p>
         </div>
         <MapScrolly />
-        <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mt-3 mb-4">
+        <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mt-3 mb-8">
           Travel times are pre-computed with r5py for a Saturday 6pm kickoff, at a corrected 5.0 km/h
           walking speed. <em>Click any tract, or search an address, to see how that trip changes.</em>
         </p>
@@ -213,52 +210,52 @@ export default function ResultsSection() {
           <ModelComparisonTable />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-6 md:gap-8 items-start mb-4">
+        <div className="mb-6">
           <VenueErrorChart label="Figure 6 · Error by venue" />
+        </div>
 
-          <ul className="space-y-5">
-            {[
-              {
-                head: "The model works until it tries to predict a new venue.",
-                body: (
-                  <>
-                    A normal 80/20 split scores R&sup2; = 0.788. Hold out one whole venue and it collapses
-                    to <strong>0.004</strong>, about as good as guessing the league average.
-                  </>
-                ),
-              },
-              {
-                head: 'It is still my strongest model.',
-                body: (
-                  <>
-                    Better than the linear stage alone (&minus;0.045) and my earlier untuned runs
-                    (&minus;0.167). Better than negative is not the same as working.
-                  </>
-                ),
-              },
-              {
-                head: 'Etihad Park gets a range, not a number.',
-                body: (
-                  <>
-                    No model here can predict a stadium it has never seen, and the error swing bears that
-                    out: under 1,200 fans at some venues, over 10,000 at others.
-                  </>
-                ),
-              },
-            ].map((t) => (
-              <li key={t.head}>
-                <p className="font-serif-heading text-lg font-semibold text-[var(--color-primary-deep)] leading-snug">
-                  {t.head}
-                </p>
-                <p className="flex gap-2.5 text-[15px] text-[var(--color-ink)]/80 leading-snug mt-1.5">
-                  <span className="shrink-0 text-[var(--color-accent)] font-semibold" aria-hidden>
-                    &rarr;
-                  </span>
-                  <span>{t.body}</span>
-                </p>
-              </li>
-            ))}
-          </ul>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-4">
+          {[
+            {
+              head: "The model works until it tries to predict a new venue.",
+              body: (
+                <>
+                  A normal 80/20 split scores R&sup2; = 0.788. Hold out one whole venue and it collapses
+                  to <strong>0.004</strong>, about as good as guessing the league average.
+                </>
+              ),
+            },
+            {
+              head: 'It is still my strongest model.',
+              body: (
+                <>
+                  Better than the linear stage alone (&minus;0.045) and my earlier untuned runs
+                  (&minus;0.167). Better than negative is not the same as working.
+                </>
+              ),
+            },
+            {
+              head: 'Etihad Park gets a range, not a number.',
+              body: (
+                <>
+                  No model here can predict a stadium it has never seen, and the error swing bears that
+                  out: under 1,200 fans at some venues, over 10,000 at others.
+                </>
+              ),
+            },
+          ].map((t) => (
+            <div key={t.head} className="border border-[var(--color-line)] bg-[var(--color-paper)] p-5 shadow-offset-sm">
+              <p className="font-serif-heading text-lg font-semibold text-[var(--color-primary-deep)] leading-snug">
+                {t.head}
+              </p>
+              <p className="flex gap-2.5 text-[15px] text-[var(--color-ink)]/80 leading-snug mt-2">
+                <span className="shrink-0 text-[var(--color-accent)] font-semibold" aria-hidden>
+                  &rarr;
+                </span>
+                <span>{t.body}</span>
+              </p>
+            </div>
+          ))}
         </div>
 
         {/* ================= H3 ================= */}
@@ -271,10 +268,7 @@ export default function ResultsSection() {
         />
 
         <div className="mb-4">
-          <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
-            Table 2 &middot; Reach gain vs. attendance change, all five relocations
-          </p>
-          <RelocationTable />
+          <RelocationScatter label="Figure 7 · Reach gain vs. attendance change" />
           <p className="text-sm text-[var(--color-ink)]/70 leading-relaxed mt-3 max-w-3xl">
             Three teams is too small a sample to draw a reliable conclusion from. It is also impossible
             to separate the reach gain from the honeymoon effect. Therefore, despite the trend, H3 is

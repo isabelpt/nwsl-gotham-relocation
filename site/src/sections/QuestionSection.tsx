@@ -25,7 +25,7 @@ export default function QuestionSection() {
   return (
     <section id="question" className="border-t border-[var(--color-line)] py-16">
       <div className="max-w-5xl mx-auto px-6">
-        <SectionHeading eyebrow="The question" title="A dominant team, and a lot of empty seats" />
+        <SectionHeading eyebrow="The question" title="A dominant team with a lot of empty seats" />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           <div className="md:col-span-2 space-y-4 text-[var(--color-ink)]/85 leading-relaxed">
@@ -41,9 +41,7 @@ export default function QuestionSection() {
               venue, drew <strong>42,175</strong> fans, <strong>5x</strong> their average attendance.
             </p>
             <p>
-              But the move is a trade, not simply a gain. Crossing the river hands the club almost
-              all of New York City and takes it away from most of New Jersey, where its current fans
-              are.
+              The move is a trade, vastly improving  New York City's access while taking it away from New Jersey.
             </p>
           </div>
 

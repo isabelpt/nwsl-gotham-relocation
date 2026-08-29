@@ -7,7 +7,7 @@ import { useStickySteps } from '../scroll/useStickySteps'
 const CAPTIONS = [
   {
     head: 'If Gotham never moves.',
-    body: 'Riding league-wide growth alone from their current home in Harrison, they reach about half the building.',
+    body: 'Riding league-wide growth alone from their current home in Harrison, they reach a bit under half the building.',
   },
   {
     head: 'The move, at its most cautious.',
@@ -18,8 +18,8 @@ const CAPTIONS = [
     body: "Seattle's lift, the one relocation whose synthetic control I could validate against what really happened next.",
   },
   {
-    head: 'A full house.',
-    body: "Washington Spirit's lift would put Gotham past 25,000, so the estimate stops at the capacity of the building.",
+    head: 'The most optimistic case.',
+    body: "Washington Spirit's lift, the largest of the three -- close to a full house, but not quite there.",
   },
 ]
 
