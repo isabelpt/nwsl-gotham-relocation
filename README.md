@@ -130,26 +130,6 @@ compute the flag from the reliable `primary_team_id` and `secondary_team_id` col
 and after the fix its SHAP contribution collapsed to roughly zero, confirming it was the bug and
 not a real effect.
 
-## What I tried and cut
-
-- **Fixed-effects panel regression and a difference-in-differences cross-check.** Both were
-  built and both worked. The accessibility coefficient was positive and consistent across every
-  specification, but never statistically significant, because roughly 4 to 5 relocation events
-  is a hard sample-size ceiling. I cut them because panel econometrics was not covered in
-  QSS 45, not because they failed. The substantive finding is carried forward qualitatively.
-- **A pooled NWSL and MLS model.** Expanding to 27 MLS teams gives 16 relocation events instead
-  of 4, but NWSL-specific generalization got worse, since MLS's larger row count dominated the
-  splits even after league-balanced weighting. It also needed a whole additional layer of
-  exposition about why pooling two economically different leagues is valid.
-- **Isochrones for all 16 NWSL stadiums.** This answered a real question, and the answer was no:
-  the number of relocation events available to learn an accessibility effect from is fixed by
-  history, not by how many stadiums have isochrones.
-- **`transit_accessibility`, a composite feature** built from stop counts and distances that was
-  vendored wholesale from a sibling project rather than computed here. Cut for that reason.
-- **`rivalry_flag`.** Second-lowest SHAP importance of any feature, which makes sense: only
-  Portland and Seattle ever get a 1, so it is collinear with `home_team` rather than a real
-  per-game signal.
-
 ## Known limitations
 
 - Neither model shows any demonstrated ability to generalize to an unfamiliar venue. Pooled LOVO
