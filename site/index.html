@@ -25,14 +25,20 @@
       content="Three million people will be able to reach a home game within an hour. Two million others will find it harder. Does transit accessibility translate to attendance?"
     />
     <meta property="og:url" content="https://gotham-at-etihad.vercel.app/" />
-    <!-- "summary", not "summary_large_image": there is no share image in public/, and claiming
-         the large card without one renders a broken preview. -->
-    <meta name="twitter:card" content="summary" />
+    <!-- Social card: same title-card treatment as the Hero, rendered at 1200x630 so it fills the
+         large Twitter/OG preview instead of getting cropped. Regenerate by re-rendering
+         site/src/sections/Hero.tsx's markup at that canvas size if the headline or hero image
+         ever changes -- see git history for the exact recipe used. -->
+    <meta property="og:image" content="https://gotham-at-etihad.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Gotham FC's Move to Queens" />
     <meta
       name="twitter:description"
       content="Three million people will be able to reach a home game within an hour. Two million others will find it harder."
     />
+    <meta name="twitter:image" content="https://gotham-at-etihad.vercel.app/og-image.png" />
   </head>
   <body>
     <div id="root"></div>

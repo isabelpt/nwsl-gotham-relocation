@@ -29,8 +29,8 @@ cross-validation, the linear stage falls below a mean-only baseline (R² = -0.04
 combined linear plus CatBoost model only reaches R² = 0.004. Naive fit looks much better
 (R² = 0.788 on a random 80/20 split), which is exactly the gap LOVO exists to expose.
 
-**The synthetic control is my strongest estimate**: 17,961 to 25,000 fans in Gotham's first
-season at Etihad Park, or 72 to 100 percent of capacity, once league-wide growth is separated
+**The synthetic control is my strongest estimate**: 14,962 to 22,849 fans in Gotham's first
+season at Etihad Park, or 60 to 91 percent of capacity, once league-wide growth is separated
 from the move itself. I report a range rather than a point estimate because it rests on three
 comparable relocations, and that is the honest way to present an estimate built on that little
 data.
@@ -63,6 +63,7 @@ code/
   10_attendance_model.ipynb                linear accessibility stage, clustered SE, LOVO
   11_catboost_attendance_model.ipynb       CatBoost on the linear residual + Queens counterfactual
   12_shap_mechanism_check.ipynb            TreeSHAP decomposition of the predicted shift
+  pull_transit_commute_share.py            ACS B08301 covariate: each stadium's home-city transit share
   summary_tables.py                        joins existing outputs into paper-ready tables
   supplementary/
     08_tract_clustering.ipynb              k-means on tract demographics (not part of the graded pipeline)
@@ -70,11 +71,24 @@ data/
   raw/        GTFS zips, OSM extracts, Census shapefiles and ACS pulls
   processed/  joined isochrone, demographic, and model tables
 output/       final figures and model output tables
-paper/        LaTeX source, figures, and Supporting Information
+Gotham_Paper.pdf   the compiled paper (LaTeX source is maintained in Overleaf, not this repo)
 ```
 
 `10` must run after `09`, because `metro_size` is written by `09`. `11` must run after `10`,
 because it reads `10`'s published coefficient.
+
+Nothing above is website tooling. The two web front ends live in their own top-level folders and
+are documented in their own READMEs, not here:
+
+```
+site/     the deployed narrative site (site/README.md) -- live at
+          https://gotham-at-etihad.vercel.app/
+  scripts/13_site_figures.py   regenerates the site's chart data + a few paper figures from
+                                the same output/*.csv the notebooks above wrote; website-only,
+                                deliberately kept out of code/'s numbered analysis pipeline
+web/      standalone MapLibre map + its data-export script (web/README.md); site/ reuses this
+          map's logic and pre-computed data rather than duplicating it
+```
 
 ## Data sources
 
@@ -121,6 +135,23 @@ analog to the real deployment question.
 pooled LOVO R² selected `depth=6, iterations=300, learning_rate=0.05, l2_leaf_reg=3`. Scoring
 against the naive split would have rewarded memorizing venues harder, which is the opposite of
 what I need.
+
+**Two of Gotham's 2026 "home" games were played at neutral venues, and the team-season panel
+didn't know that.** The synthetic control's panel build groups by `(team, season)` with no venue
+filter, so the Citi Field game (42,175 fans, a one-off across the street from the future stadium)
+and a second game at an unlisted `stadium_id` both got averaged into Gotham's 2026 season figure
+alongside its nine real Sports Illustrated Stadium games, inflating that season's average from
+the correct 8,110 to about 10,900. That fed straight into the donor weights, the no-move
+baseline, and every Etihad Park scenario. Fixed by excluding both games by `game_id` in
+`04_synthetic_control.ipynb`, the same way KC Current's capacity-suppressed games are already
+excluded elsewhere in this pipeline.
+
+**The projection was landing on 2027, and the paper called it 2028.** `baseline_2027` compounds
+exactly one year of growth past Gotham's last actual season (2026) -- a real 2027 figure, and the
+notebook's own plot labels said as much (`"Etihad Park opens 2027"`) even though Gotham's actual
+move is 2028. Fixed by compounding a second year of the same growth rate on top before it's
+reported anywhere. Combined with the panel fix above, this moved the headline synthetic-control
+range from 17,961-25,000 (72-100% of capacity) to the current 14,962-22,849 (60-91%).
 
 **Finding a data bug changed a result.** The first version of `shared_with_other_league` sent
 almost the entire predicted Queens shift through that one flag. Checking why turned up Sports

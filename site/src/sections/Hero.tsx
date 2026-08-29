@@ -33,10 +33,6 @@ export default function Hero() {
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 w-full py-16">
         <div className="bg-[var(--color-paper)]/75 backdrop-blur-[1px] border border-[var(--color-line)] shadow-offset p-8 md:p-14 max-w-3xl">
-          <p className="font-mono-label text-xs text-[var(--color-accent)] mb-5">
-            New York &middot; Transit and attendance
-          </p>
-
           <h1 className="font-serif-heading text-4xl md:text-6xl font-semibold leading-[1.05] text-[var(--color-primary-deep)]">
             Gotham FC's Move to Queens
           </h1>
@@ -48,7 +44,7 @@ export default function Hero() {
           <div className="w-10 h-0.5 bg-[var(--color-accent)] my-7" />
 
           <p className="text-base md:text-lg text-[var(--color-ink)]/80 leading-relaxed max-w-xl">
-            In 2028 Gotham FC leaves Harrison, New Jersey for Willets Point, Queens. Three million
+            In 2028, Gotham FC leaves Harrison, New Jersey for Willets Point, Queens. Three million
             people will be able to reach a home game within an hour. Will the move be enough to fix 
             Gotham's attendance problem?
           </p>
