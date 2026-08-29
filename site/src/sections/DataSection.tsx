@@ -75,44 +75,74 @@ export default function DataSection() {
           <p className="font-mono-label text-xs text-[var(--color-primary)] mb-3">
             What feeds what, by model
           </p>
-          <div className="border border-[var(--color-line)] bg-[var(--color-paper)] shadow-offset-sm overflow-x-auto">
-            <table className="w-full border-collapse min-w-[720px]">
-              <thead>
-                <tr className="border-b border-[var(--color-line)] bg-[var(--color-paper-alt)]">
-                  {['Unit', 'N', 'Used by', 'Coverage'].map((h) => (
-                    <th
-                      key={h}
-                      className="font-mono-label text-[10px] lg:text-[11px] font-medium text-[var(--color-primary)] px-3 py-3 text-left leading-tight"
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {PANELS.map((row, i) => (
-                  <tr
-                    key={row.unit}
-                    className={i !== PANELS.length - 1 ? 'border-b border-[var(--color-line)]' : ''}
-                  >
-                    <td className="px-3 py-3 font-serif-heading text-[13px] lg:text-sm text-[var(--color-primary-deep)] whitespace-nowrap align-top">
-                      {row.unit}
-                    </td>
-                    <td className="px-3 py-3 text-sm font-mono whitespace-nowrap align-top">{row.n}</td>
-                    <td className="px-3 py-3 text-xs text-[var(--color-ink)]/70 align-top">
-                      {row.usedBy}
-                      <span className="block text-[var(--color-ink)]/55 mt-1 leading-relaxed">{row.note}</span>
-                    </td>
-                    <td className="px-3 py-3 text-xs text-[var(--color-ink)]/70 align-top whitespace-nowrap">
-                      {row.coverage}
-                    </td>
+          <div className="border border-[var(--color-line)] bg-[var(--color-paper)] shadow-offset-sm">
+            {/* Card layout below sm: the table's "Used by" / "Coverage" columns wrap to
+                many lines, which (via CSS row-height) stretched off-screen columns into
+                tall empty gaps when scrolled horizontally. Cards sidestep that entirely. */}
+            <div className="sm:hidden divide-y divide-[var(--color-line)]">
+              {PANELS.map((row) => (
+                <div key={row.unit} className="p-4">
+                  <h4 className="font-serif-heading text-sm text-[var(--color-primary-deep)]">
+                    {row.unit}
+                  </h4>
+                  <span className="block text-sm font-mono text-[var(--color-ink)]/80 mt-0.5">{row.n}</span>
+                  <dl className="mt-3 space-y-2">
+                    <div>
+                      <dt className="font-mono-label text-[10px] text-[var(--color-primary)]">Used by</dt>
+                      <dd className="text-xs text-[var(--color-ink)]/70 mt-0.5">{row.usedBy}</dd>
+                    </div>
+                    <div>
+                      <dt className="font-mono-label text-[10px] text-[var(--color-primary)]">Coverage</dt>
+                      <dd className="text-xs text-[var(--color-ink)]/70 mt-0.5">{row.coverage}</dd>
+                    </div>
+                  </dl>
+                  <p className="text-xs text-[var(--color-ink)]/55 leading-relaxed mt-3">{row.note}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Table from sm up, where all four columns fit without wrapping to an
+                off-screen width. */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full border-collapse min-w-[720px]">
+                <thead>
+                  <tr className="border-b border-[var(--color-line)] bg-[var(--color-paper-alt)]">
+                    {['Unit', 'N', 'Used by', 'Coverage'].map((h) => (
+                      <th
+                        key={h}
+                        className="font-mono-label text-[10px] lg:text-[11px] font-medium text-[var(--color-primary)] px-3 py-3 text-left leading-tight"
+                      >
+                        {h}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {PANELS.map((row, i) => (
+                    <tr
+                      key={row.unit}
+                      className={i !== PANELS.length - 1 ? 'border-b border-[var(--color-line)]' : ''}
+                    >
+                      <td className="px-3 py-3 font-serif-heading text-[13px] lg:text-sm text-[var(--color-primary-deep)] whitespace-nowrap align-top">
+                        {row.unit}
+                      </td>
+                      <td className="px-3 py-3 text-sm font-mono whitespace-nowrap align-top">{row.n}</td>
+                      <td className="px-3 py-3 text-xs text-[var(--color-ink)]/70 align-top">
+                        {row.usedBy}
+                        <span className="block text-[var(--color-ink)]/55 mt-1 leading-relaxed">{row.note}</span>
+                      </td>
+                      <td className="px-3 py-3 text-xs text-[var(--color-ink)]/70 align-top whitespace-nowrap">
+                        {row.coverage}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
             <p className="px-4 py-2 text-xs text-[var(--color-primary)]/70 border-t border-[var(--color-line)]">
               This project is limited by sample size due to the league's age and some unfortunate events in those years (ahem- COVID). I have 1,132 games with
-              only four recent relocations and 
+              only four recent relocations and
               nine usable seasons.</p>
           </div>
         </div>

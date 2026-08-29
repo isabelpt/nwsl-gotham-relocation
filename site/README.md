@@ -1,29 +1,29 @@
-# Gotham FC → Queens — site
+# Gotham FC → Queens site
 
 React + TypeScript + Vite + Tailwind v4 + MapLibre GL. Live at
 **https://gotham-at-etihad.vercel.app/** (Vercel, auto-deploys on push to `main`).
 
 The page is written as a story rather than a report: it opens on the trade at the centre of the
 move, answers it with the synthetic-control estimate up front, and keeps every model, table and
-caveat afterwards as supporting evidence. Section order follows the assignment's narrative arc —
-question → data → method → result → takeaway.
+caveat afterwards as supporting evidence. Section order follows the assignment's narrative arc,
+going question, then data, then method, then result, then takeaway.
 
 ## Structure
 
 ```
 scripts/
   13_site_figures.py          # regenerates chartData.ts + the matplotlib figures below (see
-                               # "Charts are drawn in the browser" -- website-only tooling,
+                               # "Charts are drawn in the browser": website-only tooling,
                                # moved out of code/'s numbered analysis pipeline on purpose
 src/
   App.tsx                     # assembles the page
   sections/
-    Hero.tsx                  # title card — the question, not the findings
-    QuestionSection.tsx       # 01 — the question + the trade + measured reach stats
-    DataSection.tsx           # 02 — data sources
-    MethodSection.tsx         # 03 — analytical pipeline
-    ResultsSection.tsx        # 04 — the answer first, then the evidence behind it
-    TakeawaySection.tsx       # 05 — conclusions, course-scope cuts, limitations
+    Hero.tsx                  # title card, the question rather than the findings
+    QuestionSection.tsx       # 01: the question + the trade + measured reach stats
+    DataSection.tsx           # 02: data sources
+    MethodSection.tsx         # 03: analytical pipeline
+    ResultsSection.tsx        # 04: the answer first, then the evidence behind it
+    TakeawaySection.tsx       # 05: conclusions, course-scope cuts, limitations
   components/                 # Nav, Footer, SectionHeading, FigureCard, StatTile, Tag,
                               # TransitionHeading, HypothesisVerdict, IsochroneMotif,
                               # AccessibilityMap, TripPanel, TradeLedger, StadiumFillViz,
@@ -41,21 +41,21 @@ src/
     modelComparison.ts        # naive vs. held-out-venue fit (output/*_fit_summary.csv)
     relocations.ts            # reach vs. attendance per relocation, plus the placebo results
   assets/figures/             # exported chart PNGs, copied from ../output
-public/data/                  # tracts.geojson, transit_lines.geojson, stats.json — copied from
+public/data/                  # tracts.geojson, transit_lines.geojson, stats.json, copied from
                               # ../web/public/data (regenerate there with export_map_data.py,
                               # then re-copy here)
 ```
 
 ## Numbers on the page come from the data, not from the source
 
-Every aggregate in the narrative — the population on each side of the trade, the minutes gained
-and lost, who moves in and out of the one-hour ring — is computed in the browser from
+Every aggregate in the narrative (the population on each side of the trade, the minutes gained
+and lost, who moves in and out of the one-hour ring) is computed in the browser from
 `public/data/tracts.geojson` by `map/tractData.ts`. None of it is transcribed by hand, so a
-figure in the copy cannot drift away from the map beside it. The file is fetched and parsed
-once per page load and shared by the map and the narrative sections.
+figure in the copy can't drift away from the map beside it. The file is fetched and parsed once
+per page load and shared by the map and the narrative sections.
 
 Counts cover tracts within **90 minutes** of at least one stadium, the widest ring this project
-modelled. Verified against the notebooks: 6,990,336 people better off on the New York side,
+modelled. Checked against the notebooks: 6,990,336 people better off on the New York side,
 1,740,534 worse off on the New Jersey side, 3,065,588 into the 60-minute ring and 915,783 out of
 it, averaging 28 minutes saved and 46 minutes lost.
 
@@ -63,22 +63,22 @@ it, averaging 28 minutes saved and 46 minutes lost.
 
 Two graphics tell a short story when the reader reaches them: the stadium bowl fills through its
 four attendance scenarios, and the map's travel-time rings grow out to 60 minutes. Neither is
-pinned to a scroll position — the sequence plays on arrival and then hands control to the reader,
-so nothing is trapped mid-story. Both honour `prefers-reduced-motion` by jumping to the final
-frame, and both render their true values even where `IntersectionObserver` and
+pinned to a scroll position; the sequence plays on arrival and then hands control back to the
+reader, so nothing traps the reader mid-story. Both honour `prefers-reduced-motion` by jumping to
+the final frame, and both render their true values even where `IntersectionObserver` and
 `requestAnimationFrame` never run (background tabs, uncomposited webviews, screenshot capture).
 
 ## Charts are drawn in the browser, not exported as images
 
-Three of the four charts — the reach effect, the per-venue error and the mechanism decomposition
-— are React components under `src/components/charts/`, drawing SVG and CSS from
+Three of the four charts, the reach effect, the per-venue error and the mechanism decomposition,
+are React components under `src/components/charts/`, drawing SVG and CSS from
 `src/data/chartData.ts`. They scale to any viewport, keep their labels as selectable text for
 search and screen readers, and use the site's own Source Serif and Inter.
 
 `chartData.ts` is **generated by `site/scripts/13_site_figures.py`** and should never be
 hand-edited. That script reads the same `output/*.csv` the notebooks wrote (and recomputes the
 SHAP decomposition from the saved model, since that one has no intermediate CSV), so a chart on
-the page cannot drift from the paper. Re-run it (`cd site/scripts && python3 13_site_figures.py`)
+the page can't drift from the paper. Re-run it (`cd site/scripts && python3 13_site_figures.py`)
 after any model change; it also re-renders the matplotlib versions into `output/` for the paper,
 which does want fixed images.
 
@@ -89,9 +89,9 @@ paper.
 ## Nothing map-related loads until you scroll to it
 
 The tract file and the basemap together are about 2.8MB, and the map sits roughly ten screens
-down. Every consumer of that data — the map itself, the trade ledger in section 01, the trip
-panel, the map's scroll captions — waits for an `IntersectionObserver` before fetching, so the
-opening screens cost nothing but the bundle. Verified: zero GeoJSON requests at the top of the
+down. Every consumer of that data (the map itself, the trade ledger in section 01, the trip
+panel, the map's scroll captions) waits for an `IntersectionObserver` before fetching, so the
+opening screens cost nothing but the bundle. Checked: zero GeoJSON requests at the top of the
 page.
 
 ## The rivers
@@ -115,7 +115,7 @@ stadium and the difference between them.
 project maps a point on the map to a crowd size, and inventing one would be dishonest; travel
 time per tract is what the data actually supports.
 
-The **demographic-cluster view is intentionally left out** — that k-means analysis isn't part of
+The **demographic-cluster view is intentionally left out**: that k-means analysis isn't part of
 what this project defends as its modeling approach (see the top-level README). If `web/`'s
 underlying data changes, re-run `web/export_map_data.py` and copy the refreshed
 `tracts.geojson` / `transit_lines.geojson` / `stats.json` into `public/data/` here.
@@ -128,4 +128,4 @@ npm run dev
 ```
 
 `npm run build` runs `tsc -b` first, so a type error or an unused import fails the build. Run it
-before pushing — Vercel runs the same command.
+before pushing; Vercel runs the same command.
