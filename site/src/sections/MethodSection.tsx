@@ -27,7 +27,7 @@ export default function MethodSection() {
   return (
     <section id="method" className="border-t border-[var(--color-line)] py-16">
       <div className="max-w-5xl mx-auto px-6">
-        <SectionHeading index="03" title="The Method" eyebrow="Approach" />
+        <SectionHeading eyebrow="The method" title="How I tested it" />
         <p className="text-[var(--color-ink)]/85 leading-relaxed mb-10">
           I use game-level attendance from 2016 to 2026, dropping 2020 and 2021 because COVID restrictions
           made those crowds meaningless. Two things run on top of it: a predictive model, and a

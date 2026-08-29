@@ -53,6 +53,24 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Readers who ask their OS to minimise motion get the same information without the movement.
+   The JavaScript side honours this too (see scroll/useInView.ts): the figures that animate
+   themselves on arrival jump straight to their final frame rather than replaying a sequence. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);

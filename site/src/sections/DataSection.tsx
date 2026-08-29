@@ -51,7 +51,7 @@ export default function DataSection() {
   return (
     <section id="data" className="border-t border-[var(--color-line)] py-16">
       <div className="max-w-5xl mx-auto px-6">
-        <SectionHeading index="02" title="The Data" eyebrow="Sources" />
+        <SectionHeading eyebrow="The data" title="What I could actually measure" />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {SOURCES.map((s) => (
             <div

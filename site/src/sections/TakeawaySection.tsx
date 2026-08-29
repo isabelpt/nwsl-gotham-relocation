@@ -35,7 +35,7 @@ export default function TakeawaySection() {
   return (
     <section id="takeaway" className="border-t border-[var(--color-line)] py-16">
       <div className="max-w-5xl mx-auto px-6">
-        <SectionHeading index="05" title="So does better access mean more fans?" eyebrow="So what" />
+        <SectionHeading eyebrow="The takeaway" title="So does better access mean more fans?" />
 
         <div className="border border-[var(--color-primary-deep)] bg-[var(--color-primary-deep)] text-white p-8 shadow-offset">
           <p className="font-mono-label text-[11px] text-[var(--color-accent)] mb-3">The short answer</p>

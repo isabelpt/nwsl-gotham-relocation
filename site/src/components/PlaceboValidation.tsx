@@ -26,7 +26,7 @@ export default function PlaceboValidation() {
           </div>
           <figcaption className="p-3">
             <p className="font-mono-label text-[10px] text-[var(--color-primary)] mb-1.5">
-              Figure 5 &middot; The method vs. reality
+              Figure 2 &middot; The method vs. reality
             </p>
             <p className="text-xs text-[var(--color-ink)]/70 leading-relaxed">
               Both pre-move fits are tight, and both teams pull away from their no-move twin the moment

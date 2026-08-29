@@ -1,4 +1,6 @@
 import SectionHeading from '../components/SectionHeading'
+import StatTile from '../components/StatTile'
+import TradeLedger from '../components/TradeLedger'
 
 // The three predictions I test. Results (04) answers them one at a time, in this order.
 const HYPOTHESES = [
@@ -23,34 +25,50 @@ export default function QuestionSection() {
   return (
     <section id="question" className="border-t border-[var(--color-line)] py-16">
       <div className="max-w-5xl mx-auto px-6">
-        <SectionHeading index="01" title="The Question" eyebrow="Motivation" />
+        <SectionHeading eyebrow="The question" title="A dominant team, and a lot of empty seats" />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           <div className="md:col-span-2 space-y-4 text-[var(--color-ink)]/85 leading-relaxed">
             <p>
               Gotham FC is dominant on the pitch, but you wouldn't know it from looking at the stands.
-              That will hopefully change in 2028 when they move to Etihad Park in Willets Point, Queens from Harrison, New Jersey. 
-              That number of people who can reach a home game in an hour will go from 1.05 million to 3.20 million, more than <strong>2x the reach of any current NWSL stadium</strong>.
+              That will hopefully change in 2028 when they move to Etihad Park in Willets Point, Queens
+              from Harrison, New Jersey. The number of people who can reach a home game in an hour will
+              go from 1.05 million to 3.20 million, more than{' '}
+              <strong>2x the reach of any current NWSL stadium</strong>.
             </p>
             <p>
-              A good sign: Gotham's July 2026 game at Citi Field,
-              across the street from their new venue, drew <strong>42,175</strong> fans, <strong>5x</strong> their average attendance.
+              A good sign: Gotham's July 2026 game at Citi Field, across the street from their new
+              venue, drew <strong>42,175</strong> fans, <strong>5x</strong> their average attendance.
             </p>
             <p>
-              That brings me to my question: does making a stadium easier to get to actually put more
-              people in it? I test that three ways.
+              But the move is a trade, not simply a gain. Crossing the river hands the club almost
+              all of New York City and takes it away from most of New Jersey, where its current fans
+              are.
             </p>
           </div>
 
           <div className="border border-[var(--color-line)] bg-[var(--color-paper-alt)] p-5 shadow-offset-accent self-start">
-            <p className="font-mono-label text-[11px] text-[var(--color-primary)] mb-3">Why this question is difficult to answer with confidence</p>
+            <p className="font-mono-label text-[11px] text-[var(--color-primary)] mb-3">
+              Why this question is difficult to answer with confidence
+            </p>
             <p className="text-sm text-[var(--color-ink)]/80 leading-relaxed">
-              Only four NWSL teams have moved recently, and a new stadium changes many factors beyond accessibility.
-              On top of that the whole league is growing fast, from
-              5,711 average attendance in 2016 to 10,243 in 2025. Making a confident estimate requires separating
+              Only four NWSL teams have moved recently, and a new stadium changes many factors beyond
+              accessibility. On top of that the whole league is growing fast, from 5,711 average
+              attendance in 2016 to 10,243 in 2025. Making a confident estimate requires separating
               all of these competing factors.
             </p>
           </div>
+        </div>
+
+        <div className="mb-10">
+          <TradeLedger />
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-12">
+          <StatTile value="3.20M" label="Reachable within 60 min, Etihad Park" />
+          <StatTile value="1.05M" label="Reachable within 60 min, today" />
+          <StatTile value="3.0×" label="Increase in one-hour reach" />
+          <StatTile value="71%" label="of Manhattan reachable in 60 min" />
         </div>
 
         <div>

@@ -1,45 +1,119 @@
 # Gotham FC → Queens — site
 
-React + TypeScript + Vite + Tailwind v4 + MapLibre GL. Copied from
-`../../QSS 20/nwsl-project/site` and re-themed for this project — same
-section structure, same design system, new content and a live map.
+React + TypeScript + Vite + Tailwind v4 + MapLibre GL. Live at
+**https://gotham-at-etihad.vercel.app/** (Vercel, auto-deploys on push to `main`).
+
+The page is written as a story rather than a report: it opens on the trade at the centre of the
+move, answers it with the synthetic-control estimate up front, and keeps every model, table and
+caveat afterwards as supporting evidence. Section order follows the assignment's narrative arc —
+question → data → method → result → takeaway.
 
 ## Structure
 
 ```
 src/
-  App.tsx                  # assembles the page
+  App.tsx                     # assembles the page
   sections/
-    Hero.tsx                # landing view — headline + key stat highlight
-    QuestionSection.tsx      # 01 — the research question
-    DataSection.tsx          # 02 — data sources
-    MethodSection.tsx        # 03 — analytical pipeline
-    ResultsSection.tsx       # 04 — live map, then every model + what it shows
-    TakeawaySection.tsx      # 05 — conclusions, course-scope cuts, limitations
-  components/                # Nav, Footer, SectionHeading, FigureCard, StatTile,
-                              # Tag, PullQuote, IsochroneMotif (hero background),
-                              # AccessibilityMap, ModelComparisonTable, ScenarioBars
+    Hero.tsx                  # title card — the question, not the findings
+    QuestionSection.tsx       # 01 — the question + the trade + measured reach stats
+    DataSection.tsx           # 02 — data sources
+    MethodSection.tsx         # 03 — analytical pipeline
+    ResultsSection.tsx        # 04 — the answer first, then the evidence behind it
+    TakeawaySection.tsx       # 05 — conclusions, course-scope cuts, limitations
+  components/                 # Nav, Footer, SectionHeading, FigureCard, StatTile, Tag,
+                              # TransitionHeading, HypothesisVerdict, IsochroneMotif,
+                              # AccessibilityMap, TripPanel, TradeLedger, StadiumFillViz,
+                              # ModelComparisonTable, RelocationTable, MechanismExplainer,
+                              # PlaceboValidation
+  scroll/
+    useInView.ts              # IntersectionObserver + prefers-reduced-motion hooks
+    useRevealSequence.ts      # walks a graphic through its steps once it arrives on screen
   map/
     IsochroneMap.tsx          # MapLibre layer, adapted from ../../web/src/IsochroneMap.tsx
+    tractData.ts              # shared tract loader + the trade aggregates
     types.ts                  # ported from web/, clustering types dropped
   data/
-    scenarios.ts               # 2027 attendance scenarios (output/gotham_2027_projection.csv)
-    modelComparison.ts         # naive vs. held-out-team fit per model (output/leakage_check_summary.csv)
+    scenarios.ts              # 2028 attendance scenarios (output/gotham_2027_projection_growth_corrected.csv)
+    modelComparison.ts        # naive vs. held-out-venue fit (output/*_fit_summary.csv)
+    relocations.ts            # reach vs. attendance per relocation, plus the placebo results
   assets/figures/             # exported chart PNGs, copied from ../output
-public/data/                 # tracts.geojson, transit_lines.geojson, stats.json — copied from
+public/data/                  # tracts.geojson, transit_lines.geojson, stats.json — copied from
                               # ../web/public/data (regenerate there with export_map_data.py,
                               # then re-copy here)
 ```
 
+## Numbers on the page come from the data, not from the source
+
+Every aggregate in the narrative — the population on each side of the trade, the minutes gained
+and lost, who moves in and out of the one-hour ring — is computed in the browser from
+`public/data/tracts.geojson` by `map/tractData.ts`. None of it is transcribed by hand, so a
+figure in the copy cannot drift away from the map beside it. The file is fetched and parsed
+once per page load and shared by the map and the narrative sections.
+
+Counts cover tracts within **90 minutes** of at least one stadium, the widest ring this project
+modelled. Verified against the notebooks: 6,990,336 people better off on the New York side,
+1,740,534 worse off on the New Jersey side, 3,065,588 into the 60-minute ring and 915,783 out of
+it, averaging 28 minutes saved and 46 minutes lost.
+
+## Motion
+
+Two graphics tell a short story when the reader reaches them: the stadium bowl fills through its
+four attendance scenarios, and the map's travel-time rings grow out to 60 minutes. Neither is
+pinned to a scroll position — the sequence plays on arrival and then hands control to the reader,
+so nothing is trapped mid-story. Both honour `prefers-reduced-motion` by jumping to the final
+frame, and both render their true values even where `IntersectionObserver` and
+`requestAnimationFrame` never run (background tabs, uncomposited webviews, screenshot capture).
+
+## Charts are drawn in the browser, not exported as images
+
+Three of the four charts — the reach effect, the per-venue error and the mechanism decomposition
+— are React components under `src/components/charts/`, drawing SVG and CSS from
+`src/data/chartData.ts`. They scale to any viewport, keep their labels as selectable text for
+search and screen readers, and use the site's own Source Serif and Inter.
+
+`chartData.ts` is **generated by `code/13_site_figures.py`** and should never be hand-edited. That
+script reads the same `output/*.csv` the notebooks wrote (and recomputes the SHAP decomposition
+from the saved model, since that one has no intermediate CSV), so a chart on the page cannot drift
+from the paper. Re-run it after any model change; it also re-renders the matplotlib versions into
+`output/` for the paper, which does want fixed images.
+
+The placebo-validation chart is still a PNG. Redrawing it would mean refitting the synthetic
+control, and a refit landing even slightly differently would put the site out of step with the
+paper.
+
+## Nothing map-related loads until you scroll to it
+
+The tract file and the basemap together are about 2.8MB, and the map sits roughly ten screens
+down. Every consumer of that data — the map itself, the trade ledger in section 01, the trip
+panel, the map's scroll captions — waits for an `IntersectionObserver` before fetching, so the
+opening screens cost nothing but the bundle. Verified: zero GeoJSON requests at the top of the
+page.
+
+## The rivers
+
+Census TIGER tract polygons include water out to the county line, so a populated tract on the
+Manhattan shore extends halfway across the Hudson. Over a flat raster basemap that painted
+full-strength colour across the river, the harbour and Newark Bay.
+
+The fix is rendering, not geometry: the basemap is CARTO's **vector** Positron style (free, no API
+key), and the tract layers are inserted *beneath* its `waterway` layer, so the water paints back
+over them. Travel times and tract shapes are untouched.
+
 ## The interactive map
 
 `ResultsSection` embeds the accessibility-comparison view from the standalone map app in
-`../web/` directly into this site (same MapLibre logic, same pre-computed data, restyled to
-match this site's design tokens). The **demographic-cluster view is intentionally left out** —
-that k-means analysis isn't part of what this project defends as its modeling approach (see the
-top-level README). If `web/`'s underlying data changes, re-run `web/export_map_data.py` and
-copy the refreshed `tracts.geojson` / `transit_lines.geojson` / `stats.json` into
-`public/data/` here.
+`../web/` (same MapLibre logic, same pre-computed data, restyled to this site's tokens). Click a
+tract or search an address to pin it, and `TripPanel` reports that tract's travel time to each
+stadium and the difference between them.
+
+`TripPanel` deliberately does **not** predict attendance for a clicked location. No model in this
+project maps a point on the map to a crowd size, and inventing one would be dishonest; travel
+time per tract is what the data actually supports.
+
+The **demographic-cluster view is intentionally left out** — that k-means analysis isn't part of
+what this project defends as its modeling approach (see the top-level README). If `web/`'s
+underlying data changes, re-run `web/export_map_data.py` and copy the refreshed
+`tracts.geojson` / `transit_lines.geojson` / `stats.json` into `public/data/` here.
 
 ## Develop
 
@@ -48,7 +122,5 @@ npm install
 npm run dev
 ```
 
-## Deploy
-
-Push to a Git repo and import into Vercel — framework preset "Vite" is
-auto-detected. Build command `npm run build`, output directory `dist`.
+`npm run build` runs `tsc -b` first, so a type error or an unused import fails the build. Run it
+before pushing — Vercel runs the same command.

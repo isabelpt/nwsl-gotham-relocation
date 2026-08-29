@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
-import maplibregl, { Map as MapLibreMap, type ExpressionSpecification, type StyleSpecification } from 'maplibre-gl'
+import maplibregl, { Map as MapLibreMap, type ExpressionSpecification } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { SITE_CONFIG, type SiteLabel, type Threshold } from './types'
+import { SITE_CONFIG, type MapView, type SiteLabel, type Threshold } from './types'
+import { loadTracts } from './tractData'
 
 // NYC-metro bounding box, biases (and roughly restricts) Nominatim geocoding results so a
 // street name that also exists elsewhere in the US doesn't fly the map across the country.
@@ -13,21 +14,21 @@ export interface IsochroneMapHandle {
   searchAddress: (query: string) => Promise<{ ok: true } | { ok: false; error: string }>
 }
 
-// CARTO Positron, labeled version -- street/place names visible for orientation. Free, no API
-// key. Raster tiles, so this is a plain MapLibre raster style rather than a vector style.
-const BASEMAP_STYLE: StyleSpecification = {
-  version: 8,
-  sources: {
-    'carto-light': {
-      type: 'raster',
-      tiles: ['a', 'b', 'c', 'd'].map((s) => `https://${s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png`),
-      tileSize: 256,
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    },
-  },
-  layers: [{ id: 'carto-light-layer', type: 'raster', source: 'carto-light' }],
-}
+// CARTO Positron, the *vector* build rather than the raster one. Free and keyless, same as the
+// raster tiles it replaces, but it exposes the basemap's own layers by name -- which is what
+// fixes the rivers.
+//
+// Census TIGER tract polygons include the water out to the county line, so a populated tract on
+// the Manhattan shore legally extends halfway across the Hudson. Painted over a flat raster
+// basemap, that put full-strength colour across the river, the harbour and Newark Bay. Drawing
+// the tract fill *underneath* the basemap's `water` layer lets the water paint back over the
+// top, so the rivers read as rivers -- without touching the geometry or the travel times.
+const BASEMAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
+
+/** Basemap layers the tract fill must sit below, best first. The style is CARTO's and could be
+ * re-cut at any time, so this falls through to "draw on top" rather than throwing if none of
+ * them is present. */
+const WATER_LAYER_CANDIDATES = ['waterway', 'water', 'water_shadow']
 
 const NYC_CENTER: [number, number] = [-73.97, 40.72]
 // Keeps the map from ever zooming/panning out to blank grey space beyond the metro area.
@@ -36,6 +37,10 @@ const NYC_METRO_BOUNDS: [[number, number], [number, number]] = [
   [-73.1, 41.2],
 ]
 const UNREACHABLE = 999 // sentinel for tracts beyond r5py's routing window (null minutes)
+// Kept in step with map/tractData.ts, which derives the narrative's figures using the same two
+// bounds -- the map and the copy have to be describing the same set of tracts.
+const MINUTES_CAP = 150
+const MODELLED_WINDOW = 90
 
 function rbaField() {
   return ['coalesce', ['get', SITE_CONFIG.current.minutesField], UNREACHABLE] as ExpressionSpecification
@@ -65,22 +70,108 @@ function compareOpacityExpr(threshold: Threshold): ExpressionSpecification {
   return ['case', ['<=', withinField, threshold], 0.75, 0.06] as ExpressionSpecification
 }
 
+/** Minutes at Etihad Park minus minutes at Sports Illustrated Stadium. Negative means the move
+ * brings the game closer. Both legs are capped before subtracting so the 999 "unroutable"
+ * sentinel can't manufacture a huge fake swing. */
+function deltaExpr(): ExpressionSpecification {
+  return [
+    '-',
+    ['min', etihadField(), MINUTES_CAP],
+    ['min', rbaField(), MINUTES_CAP],
+  ] as ExpressionSpecification
+}
+
+/** Only tracts inside the window this project actually modelled take part in the one-sided
+ * views; everything else fades to context. */
+function inWindowExpr(): ExpressionSpecification {
+  return ['<=', ['min', rbaField(), etihadField()], MODELLED_WINDOW] as ExpressionSpecification
+}
+
+/** Gainers: purple, deepening with the number of minutes saved. */
+function gainersColorExpr(): ExpressionSpecification {
+  return [
+    'interpolate',
+    ['linear'],
+    deltaExpr(),
+    -60,
+    SITE_CONFIG.future.color,
+    -20,
+    '#8f7ac4',
+    0,
+    '#efece6',
+  ] as ExpressionSpecification
+}
+
+/** Losers: red, deepening with the number of minutes lost. */
+function losersColorExpr(): ExpressionSpecification {
+  return [
+    'interpolate',
+    ['linear'],
+    deltaExpr(),
+    0,
+    '#efece6',
+    20,
+    '#ea8b8a',
+    60,
+    SITE_CONFIG.current.color,
+  ] as ExpressionSpecification
+}
+
+function oneSidedOpacityExpr(side: 'gainers' | 'losers'): ExpressionSpecification {
+  const onThisSide: ExpressionSpecification =
+    side === 'gainers'
+      ? (['<', deltaExpr(), 0] as ExpressionSpecification)
+      : (['>', deltaExpr(), 0] as ExpressionSpecification)
+  return [
+    'case',
+    ['all', inWindowExpr(), onThisSide],
+    0.8,
+    0.04,
+  ] as ExpressionSpecification
+}
+
+function colorExprFor(view: MapView): ExpressionSpecification {
+  if (view === 'gainers') return gainersColorExpr()
+  if (view === 'losers') return losersColorExpr()
+  return compareColorExpr()
+}
+
+function opacityExprFor(view: MapView, threshold: Threshold): ExpressionSpecification {
+  if (view === 'gainers') return oneSidedOpacityExpr('gainers')
+  if (view === 'losers') return oneSidedOpacityExpr('losers')
+  return compareOpacityExpr(threshold)
+}
+
 interface Props {
   threshold: Threshold
+  /** Which painting of the tract layer to show. Changes repaint the existing layer in place. */
+  view?: MapView
   onTractHover: (props: Record<string, unknown> | null) => void
+  /** Fired when the reader commits to a tract -- a click on the map, or a successful address
+   * search. Distinct from hover: the selection persists, which is what the trip readout needs
+   * and the only way any of this works on touch, where there is no hover at all. */
+  onTractSelect?: (props: Record<string, unknown> | null) => void
 }
 
 // Accessibility-comparison view only -- the demographic-cluster layer from the standalone
 // map app (web/) is intentionally left out here; that k-means analysis isn't part of what
 // this project defends as its modeling approach (see the README).
 const IsochroneMap = forwardRef<IsochroneMapHandle, Props>(function IsochroneMap(
-  { threshold, onTractHover },
+  { threshold, view = 'compare', onTractHover, onTractSelect },
   ref,
 ) {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const mapRef = useRef<MapLibreMap | null>(null)
   const loadedRef = useRef(false)
   const searchMarkerRef = useRef<maplibregl.Marker | null>(null)
+
+  // The map is initialised once and never re-mounted, so any handler registered inside that
+  // effect would capture the first render's props forever. Keeping the callbacks in refs that
+  // are refreshed every render means the handlers always reach the current ones.
+  const onHoverRef = useRef(onTractHover)
+  const onSelectRef = useRef(onTractSelect)
+  onHoverRef.current = onTractHover
+  onSelectRef.current = onTractSelect
 
   useEffect(() => {
     if (!mapContainer.current) return
@@ -101,34 +192,47 @@ const IsochroneMap = forwardRef<IsochroneMapHandle, Props>(function IsochroneMap
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
 
     map.on('load', async () => {
+      // Shared with the narrative sections, which derive their headline figures from the same
+      // file (see tractData.ts). Going through the memoised loader means this ~1.9MB file is
+      // fetched and parsed once per page load rather than once per consumer.
       const [tracts, transitLines] = await Promise.all([
-        fetch('/data/tracts.geojson').then((r) => r.json()),
+        loadTracts(),
         fetch('/data/transit_lines.geojson').then((r) => r.json()),
       ])
 
       map.addSource('tracts', { type: 'geojson', data: tracts })
       map.addSource('transit-lines', { type: 'geojson', data: transitLines })
 
-      map.addLayer({
-        id: 'tracts-fill',
-        type: 'fill',
-        source: 'tracts',
-        paint: {
-          'fill-color': compareColorExpr(),
-          'fill-opacity': compareOpacityExpr(threshold),
-        },
-      })
+      // Insert below the first water layer the style actually has, so rivers and harbour paint
+      // back over the tract polygons that legally extend into them.
+      const beforeWater = WATER_LAYER_CANDIDATES.find((id) => map.getLayer(id))
 
-      map.addLayer({
-        id: 'tracts-outline',
-        type: 'line',
-        source: 'tracts',
-        paint: {
-          'line-color': '#ffffff',
-          'line-width': 0.2,
-          'line-opacity': 0.3,
+      map.addLayer(
+        {
+          id: 'tracts-fill',
+          type: 'fill',
+          source: 'tracts',
+          paint: {
+            'fill-color': colorExprFor(view),
+            'fill-opacity': opacityExprFor(view, threshold),
+          },
         },
-      })
+        beforeWater,
+      )
+
+      map.addLayer(
+        {
+          id: 'tracts-outline',
+          type: 'line',
+          source: 'tracts',
+          paint: {
+            'line-color': '#ffffff',
+            'line-width': 0.2,
+            'line-opacity': 0.3,
+          },
+        },
+        beforeWater,
+      )
 
       map.addLayer({
         id: 'transit-lines-layer',
@@ -160,12 +264,18 @@ const IsochroneMap = forwardRef<IsochroneMapHandle, Props>(function IsochroneMap
       map.on('mousemove', 'tracts-fill', (e) => {
         map.getCanvas().style.cursor = 'pointer'
         if (e.features && e.features.length > 0) {
-          onTractHover(e.features[0].properties ?? null)
+          onHoverRef.current(e.features[0].properties ?? null)
         }
       })
       map.on('mouseleave', 'tracts-fill', () => {
         map.getCanvas().style.cursor = ''
-        onTractHover(null)
+        onHoverRef.current(null)
+      })
+
+      map.on('click', 'tracts-fill', (e) => {
+        if (e.features && e.features.length > 0) {
+          onSelectRef.current?.(e.features[0].properties ?? null)
+        }
       })
 
       loadedRef.current = true
@@ -179,12 +289,26 @@ const IsochroneMap = forwardRef<IsochroneMapHandle, Props>(function IsochroneMap
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Update fill opacity when the threshold changes.
+  // Repaint in place when the threshold or the view changes. Setting paint properties on the
+  // existing layer keeps the map instance, its tiles and its camera untouched -- re-creating
+  // the layer or the map here would flash and reset the reader's position.
   useEffect(() => {
     const map = mapRef.current
     if (!map || !loadedRef.current || !map.getLayer('tracts-fill')) return
-    map.setPaintProperty('tracts-fill', 'fill-opacity', compareOpacityExpr(threshold))
-  }, [threshold])
+    map.setPaintProperty('tracts-fill', 'fill-color', colorExprFor(view))
+    map.setPaintProperty('tracts-fill', 'fill-opacity', opacityExprFor(view, threshold))
+  }, [threshold, view])
+
+  // The map only knows its size at construction, so a container that changes shape -- going
+  // full-bleed, or being pinned -- leaves it rendering at stale dimensions until it is told.
+  useEffect(() => {
+    const map = mapRef.current
+    const el = mapContainer.current
+    if (!map || !el || typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(() => map.resize())
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
   useImperativeHandle(ref, () => ({
     async searchAddress(query: string) {
@@ -232,7 +356,11 @@ const IsochroneMap = forwardRef<IsochroneMapHandle, Props>(function IsochroneMap
 
       const point = map.project(lngLat)
       const features = map.queryRenderedFeatures(point, { layers: ['tracts-fill'] })
-      onTractHover(features[0]?.properties ?? null)
+      const found = features[0]?.properties ?? null
+      onHoverRef.current(found)
+      // A search is a deliberate choice of place, so it pins the trip readout the same way a
+      // click does rather than evaporating on the next mouse move.
+      onSelectRef.current?.(found)
 
       return { ok: true }
     },
