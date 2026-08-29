@@ -73,8 +73,7 @@ output/       final figures and model output tables
 paper/        LaTeX source, figures, and Supporting Information
 ```
 
-`10` must run after `09`, because `metro_size` is written by `09`. `11` must run after `10`,
-because it reads `10`'s published coefficient.
+Files should be run in numerical order.
 
 ## Data sources
 
