@@ -16,7 +16,7 @@ export default function Footer() {
             href="https://github.com/isabelpt/nwsl-gotham-relocation/blob/main/paper/Gotham_Paper.pdf"
             className="text-sm underline decoration-2 decoration-[var(--color-accent)] underline-offset-4"
           >
-            Paper
+            Full write-up (PDF)
           </a>
           <a
             href="https://nwsl-growth.vercel.app/"
