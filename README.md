@@ -1,4 +1,4 @@
-# NWSL Geospatial: Gotham FC's Move to Queens
+# Gotham FC's Move to Queens
 
 **Does transit accessibility translate to attendance?**
 
