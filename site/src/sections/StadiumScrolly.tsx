@@ -19,7 +19,7 @@ const CAPTIONS = [
   },
   {
     head: 'The most optimistic case.',
-    body: "Washington Spirit's lift, the largest of the three -- close to a full house, but not quite there.",
+    body: "Washington Spirit's lift, the largest of the three, close to a full house but not quite there.",
   },
 ]
 

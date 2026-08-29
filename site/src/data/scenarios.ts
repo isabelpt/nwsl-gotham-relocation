@@ -34,5 +34,5 @@ export const scenarios: ScenarioRow[] = [
   { label: 'No move (stay at Sports Illustrated Stadium)', short: 'No move', attendance: 10926, pctOfCapacity: 43.7, note: 'league growth only', kind: 'baseline' },
   { label: 'Etihad Park, low', short: 'Low', attendance: 14962, pctOfCapacity: 59.8, note: "San Diego's lift, minus league growth", kind: 'range' },
   { label: 'Etihad Park, mid', short: 'Mid', attendance: 15992, pctOfCapacity: 64.0, note: "Seattle's lift, minus league growth", kind: 'range' },
-  { label: 'Etihad Park, high', short: 'High', attendance: 22849, pctOfCapacity: 91.4, note: "Washington Spirit's lift -- the largest of the three, but still short of a sellout", kind: 'range' },
+  { label: 'Etihad Park, high', short: 'High', attendance: 22849, pctOfCapacity: 91.4, note: "Washington Spirit's lift, the largest of the three, but still short of a sellout", kind: 'range' },
 ]

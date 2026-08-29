@@ -64,7 +64,7 @@ export default function SyntheticControlFigure({ label }: { label?: string }) {
           preserveAspectRatio="xMidYMid meet"
           className="w-full flex-1 min-h-0"
           role="img"
-          aria-label="Line chart, 2022 through 2028. Gotham FC's actual home attendance and a synthetic no-move counterfactual track each other loosely from 2022 to 2026. From 2026, three dashed lines fan out above the counterfactual toward 2028 -- a low, mid, and high scenario -- shaded as a range, while the counterfactual keeps climbing on its own, slower path to about 13,100."
+          aria-label="Line chart, 2022 through 2028. Gotham FC's actual home attendance and a synthetic no-move counterfactual track each other loosely from 2022 to 2026. From 2026, three dashed lines fan out above the counterfactual toward 2028 (a low, mid, and high scenario), shaded as a range, while the counterfactual keeps climbing on its own, slower path to about 10,926."
         >
           {Y_TICKS.map((t) => (
             <g key={t}>
