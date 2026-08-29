@@ -33,6 +33,9 @@ export default function Hero() {
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 w-full py-16">
         <div className="bg-[var(--color-paper)]/75 backdrop-blur-[1px] border border-[var(--color-line)] shadow-offset p-8 md:p-14 max-w-3xl">
+        <p className="font-mono-label text-xs text-[var(--color-accent)] mb-4">
+              NWSL Market Study v2
+            </p>
           <h1 className="font-serif-heading text-4xl md:text-6xl font-semibold leading-[1.05] text-[var(--color-primary-deep)]">
             Gotham FC's Move to Queens
           </h1>
